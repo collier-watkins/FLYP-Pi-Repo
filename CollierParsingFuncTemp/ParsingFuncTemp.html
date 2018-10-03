@@ -1,0 +1,75 @@
+<!--
+This document is a testing environment for javascript function development.
+
+For our purposes, the parser() function is the key component on this page.
+Copy/Paste parser() into the front-end UX for use.
+
+-->
+<html>
+<head>
+	<title> Card ID Parsing Function </title>
+	
+	<style>
+	 
+	
+	</style>
+	
+	
+</head>
+<body>
+
+<script>
+
+function runParser(){
+	var rawData = document.getElementById('RawCardData').value;
+	var parsedData = parser(rawData);
+
+	document.getElementById('output').value = parser(rawData);
+
+
+}
+
+
+
+function parser(rawData){
+
+	var regexFullRead = /^%[0-9]{16}\?(\;[0-9]{16}\?)?(\+[0-9]{16}\?/)?
+
+	if(regexFullRead.test(rawData)){	//Full read on valid ID
+		return "Good ID"	
+	}
+
+
+	else{
+		return "Regected";
+	}
+
+	return regEx.test(rawData);
+}
+
+
+</script>
+
+
+<h1> Howdy! Enter raw TAMU ID Card data in the box. </h1>
+
+
+Raw Card Data: <br>
+<textarea type="text" id="RawCardData"> Write here </textarea> <br>
+
+<br>
+
+<button style=" top:50%; left:50%;" id="parse" onclick="runParser()"> Parse </button> <br>
+
+<br>
+
+Parsed Output: <br>
+
+<textarea id="output"> 
+
+
+
+
+
+</body>
+</html>
