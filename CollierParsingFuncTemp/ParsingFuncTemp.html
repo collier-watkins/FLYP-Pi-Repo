@@ -21,10 +21,13 @@ Copy/Paste parser() into the front-end UX for use.
 <script>
 
 function runParser(){
-	var rawData = document.getElementById('RawCardData').value;
-	var parsedData = parser(rawData);
+	var rawData = document.getElementById('RawCardData').value.split(/\r?\n/);
+	
 
-	document.getElementById('output').value = parser(rawData);
+	rawData.forEach(function(element){
+		document.getElementById('output').value += "\n" + parser(element);
+	});
+
 
 
 }
@@ -33,19 +36,12 @@ function runParser(){
 
 function parser(rawData){
 
-	var regex = /[%;+]([0-9]{16})\?/;
+	var regexFull = /[%]([0-9]{16})\?([;+]\1\?([+]\1\?)?)?/;
 
-	var result = regex.exec(rawData);
-
-	result.forEach(function(r) {
-		console.log(r);
-	});
-
-	var allMatchingSubstrings = result.reduce(function(a, b){ return (a === b) ? a : NaN; });
+	var result = regexFull.test(rawData);
 	
-	console.log(allMatchingSubstrings);
 
-	if(allMatchingSubstrings){	//Full read on valid ID
+	if(result){	//Full read on valid ID
 		return "Good ID";
 	}
 
