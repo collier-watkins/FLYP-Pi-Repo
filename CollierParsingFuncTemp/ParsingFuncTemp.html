@@ -33,10 +33,20 @@ function runParser(){
 
 function parser(rawData){
 
-	var regexFullRead = /^%[0-9]{16}\?(\;[0-9]{16}\?)?(\+[0-9]{16}\?/)?
+	var regex = /[%;+]([0-9]{16})\?/;
 
-	if(regexFullRead.test(rawData)){	//Full read on valid ID
-		return "Good ID"	
+	var result = regex.exec(rawData);
+
+	result.forEach(function(r) {
+		console.log(r);
+	});
+
+	var allMatchingSubstrings = result.reduce(function(a, b){ return (a === b) ? a : NaN; });
+	
+	console.log(allMatchingSubstrings);
+
+	if(allMatchingSubstrings){	//Full read on valid ID
+		return "Good ID";
 	}
 
 
@@ -44,7 +54,7 @@ function parser(rawData){
 		return "Regected";
 	}
 
-	return regEx.test(rawData);
+	return "end of function";
 }
 
 
