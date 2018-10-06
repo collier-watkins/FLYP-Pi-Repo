@@ -20,21 +20,14 @@ Copy/Paste parser() into the front-end UX for use.
 
 <script>
 
-function runParser(){
-	var rawData = document.getElementById('RawCardData').value.split(/\r?\n/);
+function runMagParser(){
+	var rawData = document.getElementById('magStripeInput').value //.split(/\r?\n/);
 	
-
-	rawData.forEach(function(element){
-		document.getElementById('output').value += "\n" + parser(element);
-	});
-
-
-
+	document.getElementById('magStripeOutput').value = magParser(rawData);
 }
 
 
-
-function parser(rawData){
+function magParser(rawData){
 
 	var regexFull = /[%]([0-9]{16})\?([;+]\1\?([+]\1\?)?)?/;
 
@@ -44,7 +37,52 @@ function parser(rawData){
 	if(result){	//Full read on valid ID
 		return "Good ID";
 	}
+	else{
+		return "Regected";
+	}
 
+	return "end of function";
+}
+
+function runUinParser(){
+	var rawData = document.getElementById('uinInput').value // .split(/\r?\n/);
+	
+	document.getElementById('uinOutput').value = uinParser(rawData);
+}
+
+function uinParser(rawData){
+
+	var regexFull = /^[0-9]{3}00[0-9]{4}$/
+
+	var result = regexFull.test(rawData);
+	
+
+	if(result){	//Full read on valid ID
+		return "Good ID";
+	}
+	else{
+		return "Regected";
+	}
+
+	return "end of function";
+}
+
+function runRfidParser(){
+	var rawData = document.getElementById('rfidInput').value // .split(/\r?\n/);
+	
+	document.getElementById('rfidOutput').value = rfidParser(rawData);
+}
+
+function rfidParser(rawData){
+
+	var regexFull = / / //Incomplete. Need dummy data
+
+	var result = regexFull.test(rawData);
+	
+
+	if(result){	//Full read on valid ID
+		return "Good ID";
+	}
 
 	else{
 		return "Regected";
@@ -57,24 +95,53 @@ function parser(rawData){
 </script>
 
 
-<h1> Howdy! Enter raw TAMU ID Card data in the box. </h1>
+<h1> Howdy! Enter raw card data, UINs, or RFID raw data in the boxes. </h1>
 
-
-Raw Card Data: <br>
-<textarea type="text" id="RawCardData"> Write here </textarea> <br>
+<!-- Magstripe -->
+<div style="width: 100%; overflow: hidden;">
+    <div style="width: 50%; float: left;">
+    	Magstripe Raw Data<br>
+    	<textarea rows="2" cols="30" id="magStripeInput">Write here</textarea>
+    </div>
+    <div style="width: 50%; float: right;">
+    	Magstripe Output<br>
+    	<textarea rows="2" cols="20" id="magStripeOutput"> </textarea>
+    </div>
+<button style=" top:50%; left:50%;" id="magStripeButton" onclick="runMagParser()"> Parse </button> <br>
+</div>
 
 <br>
 
-<button style=" top:50%; left:50%;" id="parse" onclick="runParser()"> Parse </button> <br>
+<!-- UIN -->
+<div style="width: 100%; overflow: hidden;">
+    <div style="width: 50%; float: left;">
+    	UIN<br>
+    	<textarea rows="2" cols="30" id="uinInput">Write here</textarea>
+    </div>
+    <div style="width: 50%; float: right;">
+    	UIN Output<br>
+    	<textarea rows="2" cols="20" id="uinOutput"> </textarea>
+    </div>
+<button style=" top:50%; left:50%;" id="uinButton" onclick="runUinParser()"> Parse </button> <br>
+</div>
 
 <br>
 
-Parsed Output: <br>
 
-<textarea id="output"> 
+<!-- RFID -->
+<div style="width: 100%; overflow: hidden;">
+    <div style="width: 50%; float: left;">
+    	RFID<br>
+    	<textarea rows="2" cols="30" id="rfidInput">Write here</textarea>
+    </div>
+    <div style="width: 50%; float: right;">
+    	UIN Output<br>
+    	<textarea rows="2" cols="20" id="rfidOutput"> </textarea>
+    </div>
+<button style=" top:50%; left:50%;" id="rfidButton" onclick="runRfidParser()"> Parse </button> <br>
+</div>
 
-
-
+<br>
 
 
 </body>
