@@ -1,3 +1,20 @@
+.Submitbutton {
+  padding: 20px;
+  margin: 10px;
+  background: green;
+  color: white;
+  font-size: large;
+}
+
+.Header {
+  color: red;
+  text-align: center;
+  text-shadow: 1px 1px 1px black;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.25), rgba(0,0,0,0.1));
+  padding: 3px;
+  box-shadow: inset 2px 2px 5px rgba(0,0,0,0.5), inset -2px -2px 5px rgba(255, 255, 255, 0.5);
+}
+
 .App {
   text-align: center;
 }
