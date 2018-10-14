@@ -5,7 +5,11 @@ var command_atte;
 var class_name;
 //Class name in format of XXXX-###-### 
 function gen_Create_Table(class_name) {
-	
+	//Collier added REGEX here.
+	var regex = /[A-Z]{4}-[0-9]{3}-[0-9]{3}/;
+
+	var class_name_valid = regex.test(class_name);	//Boolean result, do with it what you wish.
+
 	/*
 	CREATE TABLE IF NOT EXISTS class_name {
 		stu_UIN INT(9) FOREIGN KEY REFERENCES Students(stu_UIN),
