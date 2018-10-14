@@ -1,26 +1,25 @@
 <!--
 This document is a testing environment for javascript function development.
 
-For our purposes, the parser() function is the key component on this page.
-Copy/Paste parser() into the front-end UX for use.
+Instructions to include parsing functions in ReactJS Front-End:
+
+1. Copy/Paste the forge-sha256 folder into an appropriate location to get the hashing function source code.
+2. Copy/Paste the magParser(), uinParser(), and rfidParser() functions into the ReactJS code
 
 -->
 <html>
 <head>
 	<title> Card ID Parsing Function </title>
 	
-	<style>
-	 
-	
-	</style>
-	
+	<!-- Using Forge's SHA-256 Hash Implementation https://github.com/brillout/forge-sha256 -->
+	<script src='forge-sha256/build/forge-sha256.min.js'></script>
 	
 </head>
 <body>
 
 <script>
 
-function runMagParser(){
+function runMag(){
 	var rawData = document.getElementById('magStripeInput').value //.split(/\r?\n/);
 	
 	document.getElementById('magStripeOutput').value = magParser(rawData);
@@ -32,10 +31,11 @@ function magParser(rawData){
 	var regexFull = /[%]([0-9]{16})\?([;+]\1\?([+]\1\?)?)?/;
 
 	var result = regexFull.test(rawData);
-	
 
-	if(result){	//Full read on valid ID
-		return "Good ID";
+	if(result){	
+		//Grab string of numbers, send through hash
+		var cardID = regexFull.exec(rawData)[1]; //Get first capturing group from Regex
+		return forge_sha256(cardID);	//Hash card ID
 	}
 	else{
 		return "Regected";
@@ -44,7 +44,7 @@ function magParser(rawData){
 	return "end of function";
 }
 
-function runUinParser(){
+function runUin(){
 	var rawData = document.getElementById('uinInput').value // .split(/\r?\n/);
 	
 	document.getElementById('uinOutput').value = uinParser(rawData);
@@ -55,10 +55,10 @@ function uinParser(rawData){
 	var regexFull = /^[0-9]{3}00[0-9]{4}$/
 
 	var result = regexFull.test(rawData);
-	
 
-	if(result){	//Full read on valid ID
-		return "Good ID";
+	if(result){
+		//No need to hash UIN
+		return rawData;
 	}
 	else{
 		return "Regected";
@@ -67,7 +67,7 @@ function uinParser(rawData){
 	return "end of function";
 }
 
-function runRfidParser(){
+function runRfid(){
 	var rawData = document.getElementById('rfidInput').value // .split(/\r?\n/);
 	
 	document.getElementById('rfidOutput').value = rfidParser(rawData);
@@ -78,10 +78,10 @@ function rfidParser(rawData){
 	var regexFull = / / //Incomplete. Need dummy data
 
 	var result = regexFull.test(rawData);
-	
 
-	if(result){	//Full read on valid ID
-		return "Good ID";
+	if(result){
+		var cardID = regexFull.exec(rawData)[1];	//Get first capturing group from Regex
+		return forge_sha256(cardID);	//Hash card ID
 	}
 
 	else{
@@ -96,6 +96,8 @@ function rfidParser(rawData){
 
 
 <h1> Howdy! Enter raw card data, UINs, or RFID raw data in the boxes. </h1>
+<p> Output for Magstripe and RFID data is hashed using Forge's SHA-256 implementation. </p>
+
 
 <!-- Magstripe -->
 <div style="width: 100%; overflow: hidden;">
@@ -107,7 +109,7 @@ function rfidParser(rawData){
     	Magstripe Output<br>
     	<textarea rows="2" cols="30" id="magStripeOutput"> </textarea>
     </div>
-<button style=" top:50%; left:50%;" id="magStripeButton" onclick="runMagParser()"> Parse </button> <br>
+<button style=" top:50%; left:50%;" id="magStripeButton" onclick="runMag()"> Parse </button> <br>
 </div>
 
 <br>
@@ -122,7 +124,7 @@ function rfidParser(rawData){
     	UIN Output<br>
     	<textarea rows="2" cols="30" id="uinOutput"> </textarea>
     </div>
-<button style=" top:50%; left:50%;" id="uinButton" onclick="runUinParser()"> Parse </button> <br>
+<button style=" top:50%; left:50%;" id="uinButton" onclick="runUin()"> Parse </button> <br>
 </div>
 
 <br>
@@ -138,7 +140,7 @@ function rfidParser(rawData){
     	UIN Output<br>
     	<textarea rows="2" cols="30" id="rfidOutput"> </textarea>
     </div>
-<button style=" top:50%; left:50%;" id="rfidButton" onclick="runRfidParser()"> Parse </button> <br>
+<button style=" top:50%; left:50%;" id="rfidButton" onclick="runRfid()"> Parse </button> <br>
 </div>
 
 <br>
