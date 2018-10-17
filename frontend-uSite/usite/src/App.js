@@ -16,10 +16,6 @@ class Textbox extends Component {
           onChange = {this.props.onChange}
           defaultValue = {this.props.value}
         />
-        <p>This is the output: {this.props.value}</p>
-        <div>
-          Also checkout the console log for more info.
-        </div>
       </div>
     );
   }
@@ -79,7 +75,8 @@ class App extends Component {
     // We can define typical JS stuff here
     // - e.g. variables, helper functions
 
-    const value = this.state.value;
+    //const value = this.state.value;
+    const className = "CSCE 121";
 
     // The return is JSX language (Babel)
     // - Babel is a preprocessor JS language that is converted into plain JS
@@ -87,19 +84,30 @@ class App extends Component {
     return (
       <div>
         <div className = "Header">
-          Look magic! {value}
+          Welcome to: {className}
         </div>
-        <div>
+        <div id = "wrapCenter">
+          <div id = "center">
+            Please swipe or scan your student ID for attendance.
+          </div>
+        </div>
+        <div id = "wrapCenter">
+          <div id = "center">
+            If you do not have your student ID, enter your UIN and press submit. 
+          </div>
           <Textbox
             onChange = {this.handleChange}
             defaultValue = {this.state.value}
             value = {this.state.value}
           />
+          <div>
+            <Submitbutton
+              onClick = { () => this.handleClick() }
+            />
+          </div>
         </div>
-        <div>
-          <Submitbutton
-            onClick = { () => this.handleClick() }
-          />
+        <div id = "wrapCenter">
+          Welcome NAME
         </div>
       </div>
     );
