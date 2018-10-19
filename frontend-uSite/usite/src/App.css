@@ -5,9 +5,27 @@
   text-align: center;
 }
 
+.bottomHUD {
+  background: cyan;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.topHUD {
+  background: cyan;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.UINform {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 .Submitbutton {
-  padding: 20px;
-  margin: 10px;
+  padding: 10px;
+  margin-bottom: 10px;
+  margin-left: 5px;
   background: green;
   color: white;
   font-size: large;

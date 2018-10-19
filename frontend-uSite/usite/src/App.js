@@ -11,12 +11,11 @@ class Textbox extends Component {
   // - If you are rendering 1 HTML element, you can just return that element
   render() {
     return(
-      <div>
         <textarea
+          className = "UINform"
+          placeholder = "input 9-digit UIN here"
           onChange = {this.props.onChange}
-          defaultValue = {this.props.value}
         />
-      </div>
     );
   }
 
@@ -26,14 +25,12 @@ class Submitbutton extends Component {
 
   render() {
     return(
-      <div>
         <button
           className = "Submitbutton"
           onClick = {this.props.onClick}
         >
           Submit
         </button>
-      </div>
     );
   }
 
@@ -86,28 +83,29 @@ class App extends Component {
         <div className = "Header">
           Welcome to: {className}
         </div>
-        <div id = "wrapCenter">
+        <div id = "wrapCenter" className = "topHUD">
           <div id = "center">
-            Please swipe or scan your student ID for attendance.
+            <b>Please swipe or scan your student ID for attendance.</b>
+            <div>
+              If you do not have your student ID, enter your UIN and press submit. 
+            </div>
           </div>
         </div>
-        <div id = "wrapCenter">
+        <div id = "wrapCenter"> 
           <div id = "center">
-            If you do not have your student ID, enter your UIN and press submit. 
-          </div>
-          <Textbox
-            onChange = {this.handleChange}
-            defaultValue = {this.state.value}
-            value = {this.state.value}
-          />
-          <div>
+            <Textbox
+              onChange = {this.handleChange}
+              value = {this.state.value}
+            />
             <Submitbutton
               onClick = { () => this.handleClick() }
             />
           </div>
         </div>
-        <div id = "wrapCenter">
-          Welcome NAME
+        <div id = "wrapCenter" className = "bottomHUD">
+          <div id = "center">
+            Welcome NAME
+          </div>
         </div>
       </div>
     );
