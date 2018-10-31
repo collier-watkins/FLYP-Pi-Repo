@@ -87,7 +87,7 @@ class App extends Component {
           <div id = "center">
             <b>Please swipe or scan your student ID for attendance.</b>
             <div>
-              If you do not have your student ID, enter your UIN and press submit. 
+              If you do not have your student ID, enter your UIN and tap submit. 
             </div>
           </div>
         </div>
