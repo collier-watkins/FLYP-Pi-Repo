@@ -1,21 +1,58 @@
-import React, { Component } from 'react';
-import './App.css';
+import React, { Component } from "react";
+import "./App.css";
 
-// Sub-component: Textbox
-// - Driven by the master component
-// - This guy defines a specific textarea and display
-class Textbox extends Component {
+class NumpadButton extends Component {
 
-  // Each render method allows the use of ONE outer </div>
-  // - Multiple inner </div> is allowed though
-  // - If you are rendering 1 HTML element, you can just return that element
   render() {
     return(
-        <textarea
-          className = "UINform"
-          placeholder = "input 9-digit UIN here"
-          onChange = {this.props.onChange}
-        />
+      <button
+        onClick = {() => this.props.onClick()}
+      >
+        {this.props.value}
+      </button>
+    );
+  }
+
+}
+
+class Numpad extends Component {
+
+  renderButton(i) {
+    return(
+      <NumpadButton
+        value = {i}
+        onClick = {() => this.handleClick(i)}
+      />
+    );
+  }
+
+  handleClick(i) {
+    this.props.onClick(i);
+  }
+
+  render() {
+    return(
+      <div>
+        <div>
+          {this.renderButton(7)}
+          {this.renderButton(8)}
+          {this.renderButton(9)}
+        </div>
+        <div>
+          {this.renderButton(4)}
+          {this.renderButton(5)}
+          {this.renderButton(6)}
+        </div>
+        <div>
+          {this.renderButton(1)}
+          {this.renderButton(2)}
+          {this.renderButton(3)}
+        </div>
+        <div>
+          {this.renderButton(0)}
+          {this.renderButton("clear")}
+        </div>
+      </div>
     );
   }
 
@@ -46,23 +83,33 @@ class App extends Component {
   // Holds the state variables and callback functions
   constructor(props) {
     super(props);
-    this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.handleNumpad = this.handleNumpad.bind(this);
     this.state = {
-      value: "YES",
+      value: "",
     };
-  }
-
-  // Defining one of the callback functions
-  handleChange(e) {
-    this.setState({ value: e.target.value });
-    console.log( "State Change, new state value = " + e.target.value );
   }
 
   handleClick() {
     const value = this.state.value;
     console.log( "Submit button clicked, captured value = " + value );
     // Here we can send the value somewhere when the user clicks the button
+  }
+
+  handleNumpad(i) {
+    if( i === "clear" ) {
+      const newValue = ""
+      this.setState({ value: newValue });
+      console.log( "State Change, new state value = " + newValue );
+    }
+    else if( this.state.value.length === 9 ) {
+      console.log( "Too long" );
+    }
+    else {
+      const newValue = this.state.value + i;
+      this.setState({ value: newValue });
+      console.log( "State Change, new state value = " + newValue );
+    }
   }
 
   // Render & return methods are a staple in each component
@@ -74,6 +121,7 @@ class App extends Component {
 
     //const value = this.state.value;
     const className = "CSCE 121";
+    const UIN = this.state.value;
 
     // The return is JSX language (Babel)
     // - Babel is a preprocessor JS language that is converted into plain JS
@@ -93,12 +141,12 @@ class App extends Component {
         </div>
         <div id = "wrapCenter"> 
           <div id = "center">
-            <Textbox
-              onChange = {this.handleChange}
-              value = {this.state.value}
-            />
+            {UIN}
             <Submitbutton
               onClick = { () => this.handleClick() }
+            />
+            <Numpad
+              onClick = {i => this.handleNumpad(i)}
             />
           </div>
         </div>
