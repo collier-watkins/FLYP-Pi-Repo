@@ -74,58 +74,51 @@ class Submitbutton extends Component {
 }
 
 // Master component: App
-// - Controls the heavy lifting
-// - Maintains the overall state of each sub-component
-// - Maintains communication b/t all components
-// - Lays out the render positions of components
 class App extends Component {
 
-  // Holds the state variables and callback functions
   constructor(props) {
     super(props);
     this.handleClick = this.handleClick.bind(this);
     this.handleNumpad = this.handleNumpad.bind(this);
     this.state = {
-      value: "",
+      UIN: "",
     };
   }
 
   handleClick() {
-    const value = this.state.value;
-    console.log( "Submit button clicked, captured value = " + value );
+    const UIN = this.state.UIN;
+    console.log( "Submit button clicked, captured value = " + UIN );
     // Here we can send the value somewhere when the user clicks the button
+    //
+    // Clear the UIN when we are done
+    this.setState({ UIN: "" });
   }
 
   handleNumpad(i) {
     if( i === "clear" ) {
       const newValue = ""
-      this.setState({ value: newValue });
+      this.setState({ UIN: newValue });
       console.log( "State Change, new state value = " + newValue );
     }
-    else if( this.state.value.length === 9 ) {
+    else if( this.state.UIN.length === 9 ) {
       console.log( "Too long" );
     }
     else {
-      const newValue = this.state.value + i;
-      this.setState({ value: newValue });
+      const newValue = this.state.UIN + i;
+      this.setState({ UIN: newValue });
       console.log( "State Change, new state value = " + newValue );
     }
   }
 
-  // Render & return methods are a staple in each component
-  // - They must exist
   render() {
 
-    // We can define typical JS stuff here
-    // - e.g. variables, helper functions
+    // Mozilla: GlobalEventHandlers.onInput
+    // --> Could be what we need
+    // window.addEventListener() ==> Use with JSX though
 
-    //const value = this.state.value;
     const className = "CSCE 121";
-    const UIN = this.state.value;
+    const UIN = this.state.UIN;
 
-    // The return is JSX language (Babel)
-    // - Babel is a preprocessor JS language that is converted into plain JS
-    // - Babel just makes our job easier
     return (
       <div>
         <div className = "Header">
@@ -149,6 +142,10 @@ class App extends Component {
               onClick = {i => this.handleNumpad(i)}
             />
           </div>
+          <textarea 
+            hidden = {true}
+            onKeyPress = {console.log("Google: Mozilla GlobalEventHandlers")}
+          />
         </div>
         <div id = "wrapCenter" className = "bottomHUD">
           <div id = "center">
@@ -160,6 +157,4 @@ class App extends Component {
   }
 }
 
-// Defines what we are pushing into the HTML driver file
-// - ONE export default per JS file! No more!
 export default App;
