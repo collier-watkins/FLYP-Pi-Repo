@@ -2,6 +2,7 @@ const electron = require('electron');
 //const electron = window.require('electron');
 //const fs = electron.remote.require('fs');
 //const ipcRenderer = electron.ipcRenderer;
+const usb = require("usb");
 
 // Module to control application life.
 const app = electron.app;
@@ -58,6 +59,23 @@ app.on('activate', function () {
     if (mainWindow === null) {
         createWindow()
     }
+
+  console.log( usb.getDeviceList() );
+
+  /*
+  process.stdin.on( "readable", () => {
+    const chunk = process.stdin.read();
+    if( chunk !== null ) {
+      //process.stdout.write( "" );
+      console.log( "out: " + chunk );
+    }
+  });
+
+  process.stdin.on( "end", () => {
+    process.stdout.write( "end" );
+  });
+  */
+
 });
 
 // In this file you can include the rest of your app's specific main process

@@ -28,6 +28,7 @@
   ],
   "devDependencies": {
     "electron": "^3.0.7",
-    "foreman": "^3.0.1"
+    "foreman": "^3.0.1",
+    "usb": "^1.3.3"
   }
 }

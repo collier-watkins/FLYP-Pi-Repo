@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import "./App.css";
 
+//var stream = require("stream");
+//process.stdin.setEncoding("utf8");
+
 class NumpadButton extends Component {
 
   render() {
@@ -82,6 +85,7 @@ class App extends Component {
     this.handleNumpad = this.handleNumpad.bind(this);
     this.state = {
       UIN: "",
+      CardReader: "",
     };
   }
 
@@ -89,7 +93,7 @@ class App extends Component {
     const UIN = this.state.UIN;
     console.log( "Submit button clicked, captured value = " + UIN );
     // Here we can send the value somewhere when the user clicks the button
-    //
+    
     // Clear the UIN when we are done
     this.setState({ UIN: "" });
   }
@@ -120,7 +124,7 @@ class App extends Component {
     const UIN = this.state.UIN;
 
     return (
-      <div>
+      <div> 
         <div className = "Header">
           Welcome to: {className}
         </div>
@@ -144,7 +148,6 @@ class App extends Component {
           </div>
           <textarea 
             hidden = {true}
-            onKeyPress = {console.log("Google: Mozilla GlobalEventHandlers")}
           />
         </div>
         <div id = "wrapCenter" className = "bottomHUD">
