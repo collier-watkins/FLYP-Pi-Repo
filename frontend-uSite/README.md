@@ -35,7 +35,19 @@ $ create-react-app my-app
 $ sudo npm install --save-dev electron
 ```
 
-## Electron Quick Start App
+## Foreman
+
+``` console
+$ sudo npm install --save-dev foreman
+```
+
+## USB
+
+``` console
+$ sudo npm install --save-dev usb
+```
+
+## Electron Quick Start App (you wont need this) 
 
 ``` console
 $ git clone https://github.com/electron/electron-quick-start

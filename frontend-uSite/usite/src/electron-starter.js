@@ -2,7 +2,6 @@ const electron = require('electron');
 //const electron = window.require('electron');
 //const fs = electron.remote.require('fs');
 //const ipcRenderer = electron.ipcRenderer;
-const usb = require("usb");
 
 // Module to control application life.
 const app = electron.app;
@@ -28,7 +27,7 @@ function createWindow() {
         });
     mainWindow.loadURL(startUrl);
     // Open the DevTools.
-    mainWindow.webContents.openDevTools();
+    //mainWindow.webContents.openDevTools();
 
     // Emitted when the window is closed.
     mainWindow.on('closed', function () {
@@ -60,23 +59,26 @@ app.on('activate', function () {
         createWindow()
     }
 
-  console.log( usb.getDeviceList() );
+});
 
-  /*
-  process.stdin.on( "readable", () => {
-    const chunk = process.stdin.read();
-    if( chunk !== null ) {
-      //process.stdout.write( "" );
-      console.log( "out: " + chunk );
-    }
-  });
+//import USBProvider from "./usb-provider.js";
+var usb = new USBProvider();
+var deviceHandle = null;
 
-  process.stdin.on( "end", () => {
-    process.stdout.write( "end" );
+usb.on("usbconnect", function(h) {
+
+  deviceHandle = h;
+
+  deviceHandle.on("data", (data) => {
+
+    var hex = data.toString("hex");
+    console.log( "Swipe data: " + hex );
+
   });
-  */
 
 });
+
+usb.poll();
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.

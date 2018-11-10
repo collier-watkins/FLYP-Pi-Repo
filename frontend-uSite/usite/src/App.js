@@ -1,8 +1,23 @@
 import React, { Component } from "react";
 import "./App.css";
 
-//var stream = require("stream");
-//process.stdin.setEncoding("utf8");
+/*
+import USBProvider from "./usb-provider.js";
+var usb = new USBProvider();
+var deviceHandle = null;
+
+usb.on("usbconnect", (h) => {
+
+  deviceHandle = h;
+  deviceHandle.on("data", (data) => {
+    var hex = data.toString("hex");
+    console.log( "Swipe data: " + hex );
+  });
+
+});
+
+usb.poll();
+*/
 
 class NumpadButton extends Component {
 

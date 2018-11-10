@@ -7,3 +7,9 @@
 - Electron
 
 - Foreman
+
+- node-hid
+
+``` console
+$ npm install --save-dev {dependencies}
+```
