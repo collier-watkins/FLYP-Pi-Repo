@@ -25,7 +25,7 @@ Select the 64-bit `Windows Installer (.msi)` option. Install it.
 
 In Visual Studio Code, open the built in terminal (or is it a built in windows command prompt?). 
 Then change directory into the App's folder. This folder will contain `package.json`
-> e.g. `$ cd usite` 
+> e.g. `$ cd awsusite` 
 
 Then type `npm start` into the terminal to run the development build locally. 
 
