@@ -1,6 +1,6 @@
 # Nodejs & Electron: setup notes
 
-## Install node v8.x on Ubuntu & Debian:
+## Install Node JS v8.x on Ubuntu & Debian:
 
 
 ``` console
@@ -17,9 +17,21 @@ $ apt install -y nodejs
 
 https://www.metachris.com/2017/01/how-to-install-nodejs-6-lts-on-ubuntu-and-centos/nstall
 
+## Install Node JS on Windows
+
+https://nodejs.org/en/download/
+
+Select the 64-bit `Windows Installer (.msi)` option. Install it.
+
+In Visual Studio Code, open the built in terminal (or is it a built in windows command prompt?). 
+Then change directory into the App's folder. This folder will contain `package.json`
+> e.g. `$ cd usite` 
+
+Then type `npm start` into the terminal to run the development build locally. 
+
 ## Create react app
 
-Global command to create a micro site react app. 
+Global command to create a micro site react app. Prepares basic React node_modules dependencies too. 
 Good to be integrated with a backend. 
 
 ``` console
@@ -32,19 +44,27 @@ $ sudo npm install -g create-react-app
 $ create-react-app my-app
 
 # if you dont have electron yet
-$ sudo npm install --save-dev electron
+$ npm install --save-dev electron
 ```
+
+https://medium.freecodecamp.org/building-an-electron-application-with-create-react-app-97945861647c
 
 ## Foreman
 
 ``` console
-$ sudo npm install --save-dev foreman
+$ npm install --save-dev foreman
 ```
 
-## USB
+## node-hid
 
 ``` console
-$ sudo npm install --save-dev usb
+$ npm install --save-dev node-hid
+```
+
+## USB (you wont need this)
+
+``` console
+$ npm install --save-dev usb
 ```
 
 ## Electron Quick Start App (you wont need this) 
