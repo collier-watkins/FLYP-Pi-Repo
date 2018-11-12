@@ -153,10 +153,10 @@ class App extends Component {
         </div>
         <div id = "wrapCenter"> 
           <div id = "center">
-            {UIN}
             <Submitbutton
               onClick = { () => this.handleClick() }
             />
+            <div>UIN:{UIN}</div>
             <Numpad
               onClick = {i => this.handleNumpad(i)}
             />
