@@ -1,23 +1,7 @@
 import React, { Component } from "react";
+//import USBProvider from "./usb-provider.js";
+//import HID from "node-hid";
 import "./App.css";
-
-/*
-import USBProvider from "./usb-provider.js";
-var usb = new USBProvider();
-var deviceHandle = null;
-
-usb.on("usbconnect", (h) => {
-
-  deviceHandle = h;
-  deviceHandle.on("data", (data) => {
-    var hex = data.toString("hex");
-    console.log( "Swipe data: " + hex );
-  });
-
-});
-
-usb.poll();
-*/
 
 class NumpadButton extends Component {
 
@@ -102,6 +86,29 @@ class App extends Component {
       UIN: "",
       CardReader: "",
     };
+
+    /*
+    var usb = new USBProvider();
+    var deviceHandle = null;
+    usb.on("usbconnect", function(h) {
+
+      deviceHandle = h;
+      deviceHandle.on("data", (data) => {
+        var hex = data.toString("hex");
+        console.log( "Swipe: " + hex );
+      });
+
+    });
+
+    usb.poll();
+    */
+
+  }
+
+  componentDidMount() {
+
+    console.log( "Mounted" );
+
   }
 
   handleClick() {
@@ -130,10 +137,6 @@ class App extends Component {
   }
 
   render() {
-
-    // Mozilla: GlobalEventHandlers.onInput
-    // --> Could be what we need
-    // window.addEventListener() ==> Use with JSX though
 
     const className = "CSCE 121";
     const UIN = this.state.UIN;

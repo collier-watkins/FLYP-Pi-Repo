@@ -1,4 +1,4 @@
-"use strict";
+//"use strict";
 
 var HID = require("node-hid");
 const EventEmitter = require("events");
@@ -29,9 +29,9 @@ class USBProvider extends EventEmitter {
       var deviceFound = false;
       HID.devices().forEach( function( device, index, records ) {
         
-        deviceFound = ( device.vendorId == VENDOR_ID );
+        deviceFound = ( device.vendorId === VENDOR_ID );
 
-        if( device.vendorId == VENDOR_ID && deviceRecord == null ) {
+        if( device.vendorId === VENDOR_ID && deviceRecord == null ) {
 
           deviceRecord = device;
           try {
@@ -49,7 +49,7 @@ class USBProvider extends EventEmitter {
           }
         }
 
-        if( index == records.length - 1 && !deviceFound ) {
+        if( index === records.length - 1 && !deviceFound ) {
 
           if( deviceRecord != null ) {
 

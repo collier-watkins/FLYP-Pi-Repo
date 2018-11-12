@@ -16,7 +16,8 @@
     "eject": "react-scripts eject",
     "electron": "electron .",
     "electron-start": "node src/electron-wait-react",
-    "react-start": "react-scripts start"
+    "react-start": "react-scripts start",
+    "postinstall": "electron-rebuild --force"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -29,6 +30,7 @@
   ],
   "devDependencies": {
     "electron": "^3.0.7",
+    "electron-rebuild": "^1.8.2",
     "foreman": "^3.0.1",
     "node-hid": "^0.7.3"
   }
