@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-//import USBProvider from "./usb-provider.js";
-//import HID from "node-hid";
 import "./App.css";
 
 class NumpadButton extends Component {
@@ -82,6 +80,7 @@ class App extends Component {
     super(props);
     this.handleClick = this.handleClick.bind(this);
     this.handleNumpad = this.handleNumpad.bind(this);
+    this.handleCardReader = this.handleCardReader.bind(this);
     this.state = {
       UIN: "",
       CardReader: "",
@@ -106,7 +105,24 @@ class App extends Component {
   }
 
   tick(){
+
     this.refs.MMM.focus();
+    const cardReaderValue = this.refs.MMM.value;
+
+    // Increase interval if the whole card reader is not caputred
+    if( cardReaderValue !== "" ) {
+      console.log( "Sent: " + cardReaderValue );
+      this.refs.MMM.value = "";
+    }
+
+  }
+
+  handleCardReader() {
+    
+    const cardReaderValue = this.refs.MMM.value;
+    console.log( "Captured Card Reader: " + cardReaderValue );
+    this.setState({ CardReader: cardReaderValue });
+
   }
 
   handleNumpad(i) {
@@ -153,12 +169,16 @@ class App extends Component {
               onClick = {i => this.handleNumpad(i)}
             />
           </div>
-          <input 
-            type = "text"
-            hidden = {false}
-            autoFocus = {true}
-            ref = "MMM"
-          />
+          <div>
+            <input 
+              type = "text"
+              hidden = {false}
+              autoFocus = {true}
+              ref = "MMM"
+              onChange = {() => this.handleCardReader()}
+              className = "hidden"
+            />
+          </div>
         </div>
         <div id = "wrapCenter" className = "bottomHUD">
           <div id = "center">

@@ -5,6 +5,10 @@
   text-align: center;
 }
 
+.hidden {
+  color: white;
+}
+
 .bottomHUD {
   background: cyan;
   padding-top: 5px;
