@@ -87,27 +87,12 @@ class App extends Component {
       CardReader: "",
     };
 
-    /*
-    var usb = new USBProvider();
-    var deviceHandle = null;
-    usb.on("usbconnect", function(h) {
-
-      deviceHandle = h;
-      deviceHandle.on("data", (data) => {
-        var hex = data.toString("hex");
-        console.log( "Swipe: " + hex );
-      });
-
-    });
-
-    usb.poll();
-    */
-
   }
 
   componentDidMount() {
 
     console.log( "Mounted" );
+    this.interval = setInterval( () => this.tick(), 100 );
 
   }
 
@@ -118,6 +103,10 @@ class App extends Component {
     
     // Clear the UIN when we are done
     this.setState({ UIN: "" });
+  }
+
+  tick(){
+    this.refs.MMM.focus();
   }
 
   handleNumpad(i) {
@@ -142,7 +131,7 @@ class App extends Component {
     const UIN = this.state.UIN;
 
     return (
-      <div> 
+      <div>
         <div className = "Header">
           Welcome to: {className}
         </div>
@@ -164,8 +153,11 @@ class App extends Component {
               onClick = {i => this.handleNumpad(i)}
             />
           </div>
-          <textarea 
-            hidden = {true}
+          <input 
+            type = "text"
+            hidden = {false}
+            autoFocus = {true}
+            ref = "MMM"
           />
         </div>
         <div id = "wrapCenter" className = "bottomHUD">

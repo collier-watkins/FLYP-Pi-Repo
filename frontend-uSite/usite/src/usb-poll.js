@@ -4,19 +4,25 @@
 const USB = require("./usb-provider");
 var usb = new USB();
 
+var HID = require('node-hid');
+console.log( 'Devices:', HID.devices() );
+
 var deviceHandle = null;
 
-usb.on("usbconnect", function(h) {
+usb.on('usbconnect', function(h) {
+  
+  console.log( "Usb Connect" );
 
   deviceHandle = h;
 
-  deviceHandle.on("data", (data) => {
+  deviceHandle.on('data', (data) => {
 
-    var hex = data.toString("hex");
-    console.log( "Swipe data: " + hex );
+    //var hex = data.toString('hex');
+    console.log( "Swipe data: " + data );
 
   });
 
 });
 
 usb.poll();
+
