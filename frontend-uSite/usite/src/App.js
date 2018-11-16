@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import "./App.css";
+import * as api from "./apiCalls.js";
+
+// When we insert a sutdent, save their card ID as null for now
 
 class NumpadButton extends Component {
 
@@ -7,6 +10,7 @@ class NumpadButton extends Component {
     return(
       <button
         onClick = {() => this.props.onClick()}
+        className = "numPad"
       >
         {this.props.value}
       </button>
@@ -50,6 +54,8 @@ class Numpad extends Component {
         </div>
         <div>
           {this.renderButton(0)}
+        </div>
+        <div>
           {this.renderButton("clear")}
         </div>
       </div>
@@ -84,6 +90,7 @@ class App extends Component {
     this.state = {
       UIN: "",
       CardReader: "",
+      Roster: [], // TODO this will be populated by a Curtis call
     };
 
   }
@@ -91,15 +98,42 @@ class App extends Component {
   componentDidMount() {
 
     console.log( "Mounted" );
-    this.interval = setInterval( () => this.tick(), 100 );
+    this.interval = setInterval( () => this.tick(), 300 );
+
+  }
+
+  checkRoster( cardValue, inputType ) {
+    
+    console.log( "Checking roster..." );
+
+    if( inputType === "UIN" ) {
+
+      console.log( "UIN input" );
+
+    }
+
+    else if( inputType === "CardReader" ) {
+
+      console.log( "CardReader input" );
+
+      // TODO check if it is an ID or RFID input
+      let IDregex = /[A-Z]{4}-[0-9]{3}-[0-9]{3}/;
+      console.log( "Parsed ID card:", IDregex.test( cardValue ) );
+      //let IDregex = /%\d+\?/;
+
+    }
 
   }
 
   handleClick() {
     const UIN = this.state.UIN;
     console.log( "Submit button clicked, captured value = " + UIN );
-    // Here we can send the value somewhere when the user clicks the button
     
+    // callApi: addStudent
+    //api.testApi();
+    
+    this.checkRoster( UIN, "UIN" );
+
     // Clear the UIN when we are done
     this.setState({ UIN: "" });
   }
@@ -112,7 +146,9 @@ class App extends Component {
     // Increase interval if the whole card reader is not caputred
     if( cardReaderValue !== "" ) {
       console.log( "Sent: " + cardReaderValue );
+      this.checkRoster( cardReaderValue, "CardReader" );
       this.refs.MMM.value = "";
+      this.setState({ UIN: "" });
     }
 
   }
