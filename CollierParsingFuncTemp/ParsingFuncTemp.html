@@ -75,7 +75,7 @@ function runRfid(){
 
 function rfidParser(rawData){
 
-	var regexFull = / / //Incomplete. Need dummy data
+	var regexFull = /[0-9]{8}/ //Incomplete. Need dummy data
 
 	var result = regexFull.test(rawData);
 
