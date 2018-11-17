@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "./App.css";
 import * as api from "./apiCalls.js";
+//import * as IDparse from "./IDparse.js";
 
 // When we insert a sutdent, save their card ID as null for now
 
@@ -117,9 +118,19 @@ class App extends Component {
       console.log( "CardReader input" );
 
       // TODO check if it is an ID or RFID input
-      let IDregex = /[A-Z]{4}-[0-9]{3}-[0-9]{3}/;
-      console.log( "Parsed ID card:", IDregex.test( cardValue ) );
-      //let IDregex = /%\d+\?/;
+      
+      /*
+      if( IDparse.magParser( cardValue, true ) === true ) {
+
+        let parsedMagID = IDparse.magParser( cardValue, false );
+        console.log( "Parsed MagID: " + parsedMagID );
+
+      }
+      */
+
+      //else if( IDparse.rfidParse( cardValue, "TEST" ) === true ) {
+
+      //}
 
     }
 
