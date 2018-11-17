@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "./App.css";
 import * as api from "./apiCalls.js";
+//import api from "./apiCalls.js";
 import * as IDparse from "./IDparse.js";
 
 // When we insert a sutdent, save their card ID as null for now
@@ -108,7 +109,19 @@ class App extends Component {
 
   }
 
-  checkRoster( cardValue, inputType ) {
+  checkProf() {
+    
+    console.log( "NOTYET" );
+    // Check Prof
+    // If valid get their classes
+    // -- Display their classes
+    // Based on their selection, get that classes roster
+    // Flip boolean tracking
+    // Start class
+
+  }
+
+  checkStudentRoster( cardValue, inputType ) {
     
     console.log( "Checking roster..." );
 
@@ -127,9 +140,9 @@ class App extends Component {
         console.log( "Parsed MagID: " + parsedMagID );
 
         const Roster = this.state.Roster;
-        Roster.forEach( function( item, index, array ) {
+        Roster.forEach( function( item ) {
 
-          const cardNum = Roster[index].cardNum;
+          const cardNum = item.cardNum;
           console.log( "Card Number:" + cardNum );
 
           if( cardNum === parsedMagID ) {
@@ -138,7 +151,6 @@ class App extends Component {
             console.log( "Attendance recorded" );
 
           }
-
 
         });
 
@@ -165,14 +177,22 @@ class App extends Component {
   handleClick() {
     const UIN = this.state.UIN;
     console.log( "Submit button clicked, captured value = " + UIN );
+
+    api.login( "999009999" ).then(data => {
+
+      console.log( "Login Data", data );
+    
+    });
     
     //api.testApi();
     //this.setState({ Roster: api.getRoster( "CSCE_121_500" ) });
-    //console.log( "Roster:", api.getRoster( "CSCE_121_500" ) );
+    let Roster = api.getRoster( "CSCE_121_500" );
+    console.log( "Roster:", Roster );
+    this.setState({ Roster: Roster });
     //api.trackAttendance("888008988", "CSCE_121_500", "2018_11_05");
     //console.log( "ROSTER:", this.state.Roster );
     
-    this.checkRoster( UIN, "UIN" );
+    this.checkStudentRoster( UIN, "UIN" );
 
     // Clear the UIN when we are done
     this.setState({ UIN: "" });
@@ -186,7 +206,7 @@ class App extends Component {
     // Increase interval if the whole card reader is not caputred
     if( cardReaderValue !== "" ) {
       console.log( "Sent: " + cardReaderValue );
-      this.checkRoster( cardReaderValue, "CardReader" );
+      this.checkStudentRoster( cardReaderValue, "CardReader" );
       this.refs.MMM.value = "";
       this.setState({ UIN: "" });
     }
@@ -231,22 +251,22 @@ class App extends Component {
           Welcome to: {className}
         </div>
 
-        <div id = "wrapCenter" className = "topHUD">
-
-          <div id = "center" hidden = {trackingStatus}>
+        <div id = "wrapCenter" className = "topHUD" hidden = {trackingStatus}>
+          <div id = "center">
             <b>Please swipe/scan your ID and select a class to start tracking attendenace</b>
             <div>
               If you do not have your student ID, enter your UIN and tap submit. 
             </div>
           </div>
+        </div>
 
-          <div id = "center" hidden = {!trackingStatus}>
+        <div id = "wrapCenter" className = "topHUD" hidden = {!trackingStatus}>
+          <div id = "center">
             <b>Please swipe or scan your student ID for attendance.</b>
             <div>
               If you do not have your student ID, enter your UIN and tap submit. 
             </div>
           </div>
-
         </div>
 
         <br/>
