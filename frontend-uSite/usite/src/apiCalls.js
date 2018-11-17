@@ -120,13 +120,8 @@ export function getRoster(courseName){
       .catch(error => console.error(error));
 }
 
-  /*
-export function login(uin) {
-  callApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api/login/' + uin, {}, "GET")
-    .then(data => {
-      console.log(data);
-      return data;
-    })
+export function updateCardOrRfid(uin, card) {
+  callApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api/card/', {uin: uin, card: card}, "PUT")
+    .then(data => console.log(data))
     .catch(error => console.error(error));
 }
-*/
