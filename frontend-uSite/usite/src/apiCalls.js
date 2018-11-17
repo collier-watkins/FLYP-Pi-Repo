@@ -91,35 +91,42 @@ function addStudentToClass(courseName, uin) {
 
 function addProfessor(uin, firstName, lastName) {
   callApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api/professor/', {uin: uin, first: firstName, last: lastName}, "POST")
-      .then(data => console.log(data.message))
-      .catch(error => console.error(error));
+        .then(data => console.log(data.message))
+        .catch(error => console.error(error));
 }
 
-function trackAttendance(studUin, courseName, date) {
-  callApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api/attendance/', {uin: studUin, course_name: courseName, date: date}, "PUT")
-    .then(data => {
-      console.log(data);
-      return data;
-    })
-    .catch(error => console.error(error));
-}
-
-function getAttendance(courseName) {
-  callGetApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api/attendance/' + courseName, "GET")
+let trackAttendance = (studUin, courseName, date) => {
+  return new Promise ((resolve, reject) => {
+    callApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api/attendance/', {uin: studUin, course_name: courseName, date: date}, "PUT")
       .then(data => {
         console.log(data);
-        return data;
+        resolve(data);
       })
       .catch(error => console.error(error));
+  });
+  
 }
 
-function getRoster(courseName){
-  callGetApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api/roster/' + courseName, "GET")
+let getAttendance = (courseName) => {
+  return new Promise ((resolve, reject) => {
+    callGetApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api/attendance/' + courseName, "GET")
       .then(data => {
         console.log(data);
-        return data;
+        resolve(data);
       })
       .catch(error => console.error(error));
+  });
+}
+
+let getRoster = (courseName) => {
+  return new Promise ((resolve, reject) => {
+    callGetApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api/roster/' + courseName, "GET")
+        .then(data => {
+        console.log(data);
+        resolve(data);
+      })
+      .catch(error => console.error(error));
+  });
 }
 
 function updateCardOrRfid(uin, card) {
@@ -130,5 +137,7 @@ function updateCardOrRfid(uin, card) {
 
 //export default api;
 module.exports = {
-  getRoster, login
+  testApi, login, addClass, addAttendanceDay, addStudent,
+  addStudentToClass, addProfessor, trackAttendance, getAttendance,
+  getRoster, updateCardOrRfid
 };
