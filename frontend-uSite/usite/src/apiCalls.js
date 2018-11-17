@@ -75,7 +75,7 @@ export function addAttendanceDay(courseName, courseDate) {
       .catch(error => console.error(error));
 }
 
-export function addStudent(uin, firstName, lastName, cardNum) {
+export function addStudent(uin, firstName, lastName) {
   callApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api/student/', {uin: uin, first: firstName, last: lastName}, "POST")
       .then(data => console.log(data.message))
       .catch(error => console.error(error));
@@ -87,7 +87,7 @@ export function addStudentToClass(courseName, uin) {
       .catch(error => console.error(error));
 }
 
-export function addProfessor(uin, firstName, lastName, cardNum) {
+export function addProfessor(uin, firstName, lastName) {
   callApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api/professor/', {uin: uin, first: firstName, last: lastName}, "POST")
       .then(data => console.log(data.message))
       .catch(error => console.error(error));
