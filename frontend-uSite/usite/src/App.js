@@ -96,7 +96,7 @@ class App extends Component {
       prof: "",
       class: "",
       date: "",
-      Roster: [] 
+      Roster: [] // array of objects
     };
 
   }
@@ -119,13 +119,10 @@ class App extends Component {
     }
 
     else if( inputType === "CardReader" ) {
-
-      console.log( "CardReader input" );
-
-      // TODO check if it is an ID or RFID input
       
       if( IDparse.magParser( cardValue, true ) === true ) {
 
+        console.log( "Mag Stripe input" );
         let parsedMagID = IDparse.magParser( cardValue, false );
         console.log( "Parsed MagID: " + parsedMagID );
 
@@ -135,14 +132,31 @@ class App extends Component {
           const cardNum = Roster[index].cardNum;
           console.log( "Card Number:" + cardNum );
 
+          if( cardNum === parsedMagID ) {
+
+            // record attendance
+            console.log( "Attendance recorded" );
+
+          }
+
 
         });
 
       }
 
-      //else if( IDparse.rfidParse( cardValue, "TEST" ) === true ) {
+      else if( IDparse.rfidParser( cardValue, true ) === true ) {
 
-      //}
+        console.log( "RFID input" );
+        let parsedRFID = IDparse.rfidParser( cardValue, false );
+        console.log( "Parsed RFID: " + parsedRFID );
+
+      }
+
+      else {
+
+        console.error( "Invalid card read" );
+
+      }
 
     }
 
@@ -152,10 +166,10 @@ class App extends Component {
     const UIN = this.state.UIN;
     console.log( "Submit button clicked, captured value = " + UIN );
     
-    // callApi: addStudent
     //api.testApi();
     //this.setState({ Roster: api.getRoster( "CSCE_121_500" ) });
-    api.trackAttendance("888008988", "CSCE_121_500", "2018_11_05");
+    //console.log( "Roster:", api.getRoster( "CSCE_121_500" ) );
+    //api.trackAttendance("888008988", "CSCE_121_500", "2018_11_05");
     //console.log( "ROSTER:", this.state.Roster );
     
     this.checkRoster( UIN, "UIN" );
@@ -207,20 +221,34 @@ class App extends Component {
 
     const className = "CSCE 121";
     const UIN = this.state.UIN;
+    const trackingStatus = this.state.tracking;
 
     return (
+
       <div>
+
         <div className = "Header">
           Welcome to: {className}
         </div>
+
         <div id = "wrapCenter" className = "topHUD">
-          <div id = "center">
+
+          <div id = "center" hidden = {trackingStatus}>
+            <b>Please swipe/scan your ID and select a class to start tracking attendenace</b>
+            <div>
+              If you do not have your student ID, enter your UIN and tap submit. 
+            </div>
+          </div>
+
+          <div id = "center" hidden = {!trackingStatus}>
             <b>Please swipe or scan your student ID for attendance.</b>
             <div>
               If you do not have your student ID, enter your UIN and tap submit. 
             </div>
           </div>
+
         </div>
+
         <br/>
         <div id = "wrapCenter"> 
           <div id = "center">
@@ -249,6 +277,7 @@ class App extends Component {
             Welcome NAME
           </div>
         </div>
+
       </div>
     );
   }

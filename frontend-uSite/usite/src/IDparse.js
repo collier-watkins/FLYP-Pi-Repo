@@ -32,7 +32,7 @@ export function magParser(rawData, test){
 
 export function rfidParser( rawData, test ){
 
-  var regexFull = /[0-9]{8}/; 
+  var regexFull = /([0-9]{8})/; 
 
   var result = regexFull.test(rawData);
 

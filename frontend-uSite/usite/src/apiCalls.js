@@ -1,12 +1,18 @@
-import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-
 // Calls API
 export function callApi(url = '', data = {}, type = '') {
 	return fetch(url, {
     method: type,
 		headers: { "Content-Type": "application/json; charset=utf-8" },
 		body: JSON.stringify(data)
+	})
+	.then(response => response.json())
+  .catch(err => console.error(err));
+}
+
+export function callGetApi(url = '' ){
+	return fetch(url, {
+    method: "GET",
+		headers: { "Content-Type": "application/json; charset=utf-8" }
 	})
 	.then(response => response.json())
   .catch(err => console.error(err));
@@ -43,13 +49,13 @@ export function callApi(url = '', data = {}, type = '') {
 //          Functions for calling API
 ///////////////////////////////////////////////////////
 export function testApi() {
-    callApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api', {test: "test"}, "POST")
+    callGetApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api', "GET")
       .then(data => console.log(data.message))
       .catch(error => console.error(error));
 }
 
 export function login(uin) {
-  callApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api/login/' + uin, {}, "GET")
+  callGetApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api/login/' + uin, "GET")
     .then(data => {
       console.log(data);
       return data;
@@ -58,7 +64,7 @@ export function login(uin) {
 }
 
 export function addClass(courseName, profUin) {
-    callApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api/class', {course_name: courseName, uin: profUin}, "POST")
+  callApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api/class/', {course_name: courseName, uin: profUin}, "POST")
       .then(data => console.log(data.message))
       .catch(error => console.error(error));
 }
@@ -70,25 +76,25 @@ export function addAttendanceDay(courseName, courseDate) {
 }
 
 export function addStudent(uin, firstName, lastName, cardNum) {
-    callApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api/student', {uin: uin, first: firstName, last: lastName}, "POST")
+  callApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api/student/', {uin: uin, first: firstName, last: lastName}, "POST")
       .then(data => console.log(data.message))
       .catch(error => console.error(error));
 }
 
 export function addStudentToClass(courseName, uin) {
-    callApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api/student', {course_name: courseName, uin: uin}, "PUT")
+  callApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api/student/', {course_name: courseName, uin: uin}, "PUT")
       .then(data => console.log(data.message))
       .catch(error => console.error(error));
 }
 
 export function addProfessor(uin, firstName, lastName, cardNum) {
-    callApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api/professor', {uin: uin, first: firstName, last: lastName}, "POST")
+  callApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api/professor/', {uin: uin, first: firstName, last: lastName}, "POST")
       .then(data => console.log(data.message))
       .catch(error => console.error(error));
 }
 
 export function trackAttendance(studUin, courseName, date) {
-  callApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api/attendance', {uin: studUin, course_name: courseName, date: date}, "PUT")
+  callApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api/attendance/', {uin: studUin, course_name: courseName, date: date}, "PUT")
     .then(data => {
       console.log(data);
       return data;
@@ -97,7 +103,7 @@ export function trackAttendance(studUin, courseName, date) {
 }
 
 export function getAttendance(courseName) {
-    callApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api/attendance' + courseName, {}, "GET")
+  callGetApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api/attendance/' + courseName, "GET")
       .then(data => {
         console.log(data);
         return data;
@@ -106,7 +112,7 @@ export function getAttendance(courseName) {
 }
 
 export function getRoster(courseName){
-    callApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api/roster' + courseName, {}, "GET")
+  callGetApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api/roster/' + courseName, "GET")
       .then(data => {
         console.log(data);
         return data;
@@ -114,6 +120,7 @@ export function getRoster(courseName){
       .catch(error => console.error(error));
 }
 
+  /*
 export function login(uin) {
   callApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api/login/' + uin, {}, "GET")
     .then(data => {
@@ -122,3 +129,4 @@ export function login(uin) {
     })
     .catch(error => console.error(error));
 }
+*/
