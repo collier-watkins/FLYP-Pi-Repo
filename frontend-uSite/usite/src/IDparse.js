@@ -1,5 +1,5 @@
 // Must import 'forge-sha256/build/forge-sha256.min.js'
-import p from "./forge-sha256/build/forge-sha256.min.js";
+//import p from "./forge-sha256/build/forge-sha256.min.js";
 
 export function magParser(rawData, test){
 
@@ -13,40 +13,48 @@ export function magParser(rawData, test){
 
   }
 
+  else if( test === false ) {
+
+      var cardID = regexFull.exec(rawData)[1]; 
+      //return forge_sha256(cardID); //Hash card ID
+      return( cardID ); 
+
+  }
+
   else {
 
     return false;
 
   }
 
-  if( test === false ) {
-
-      //Grab string of numbers, send through hash
-      var cardID = regexFull.exec(rawData)[1]; //Get first capturing group from Regex
-      //return forge_sha256(cardID); //Hash card ID
-      return p(cardID); //Hash card ID
-
-  }
-
 }
 
 
-export function rfidParser(rawData){
+export function rfidParser( rawData, test ){
 
-	var regexFull = /[0-9]{8}/ //Incomplete. Need dummy data
+  var regexFull = /[0-9]{8}/; 
 
-	var result = regexFull.test(rawData);
+  var result = regexFull.test(rawData);
 
-	if(result){
-		var cardID = regexFull.exec(rawData)[1];	//Get first capturing group from Regex
-		return forge_sha256(cardID);	//Hash card ID
-	}
+  if( test === true && result === true ){
 
-	else{
-		return "Regected";
-	}
+    return true;
 
-	return "end of function";
+  }
+
+  else if( test === false ) {
+
+    var cardID = regexFull.exec(rawData)[1];
+    return( cardID );
+
+  }
+
+  else {
+
+    return false;
+
+  }
+
 }
 
 

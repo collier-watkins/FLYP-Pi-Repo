@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./App.css";
 import * as api from "./apiCalls.js";
-//import * as IDparse from "./IDparse.js";
+import * as IDparse from "./IDparse.js";
 
 // When we insert a sutdent, save their card ID as null for now
 
@@ -119,14 +119,21 @@ class App extends Component {
 
       // TODO check if it is an ID or RFID input
       
-      /*
       if( IDparse.magParser( cardValue, true ) === true ) {
 
         let parsedMagID = IDparse.magParser( cardValue, false );
         console.log( "Parsed MagID: " + parsedMagID );
 
+        const Roster = this.state.Roster;
+        Roster.forEach( function( item, index, array ) {
+
+          const cardNum = Roster[index].cardNum;
+          console.log( "Card Number:" + cardNum );
+
+
+        });
+
       }
-      */
 
       //else if( IDparse.rfidParse( cardValue, "TEST" ) === true ) {
 
@@ -141,7 +148,10 @@ class App extends Component {
     console.log( "Submit button clicked, captured value = " + UIN );
     
     // callApi: addStudent
-    //api.testApi();
+    api.testApi();
+    //this.setState({ Roster: api.getRoster( "CSCE_121_500" ) });
+    //api.trackAttendance("111001111", "CSCE_121_500", "2018_11_14");
+    //console.log( "ROSTER:", this.state.Roster );
     
     this.checkRoster( UIN, "UIN" );
 
