@@ -57,6 +57,7 @@ class Numpad extends Component {
           {this.renderButton(0)}
         </div>
         <div>
+          <br/>
           {this.renderButton("clear")}
         </div>
       </div>
@@ -91,7 +92,11 @@ class App extends Component {
     this.state = {
       UIN: "",
       CardReader: "",
-      Roster: [], // TODO this will be populated by a Curtis call
+      tracking: false,
+      prof: "",
+      class: "",
+      date: "",
+      Roster: [] 
     };
 
   }
@@ -148,9 +153,9 @@ class App extends Component {
     console.log( "Submit button clicked, captured value = " + UIN );
     
     // callApi: addStudent
-    api.testApi();
+    //api.testApi();
     //this.setState({ Roster: api.getRoster( "CSCE_121_500" ) });
-    //api.trackAttendance("111001111", "CSCE_121_500", "2018_11_14");
+    api.trackAttendance("888008988", "CSCE_121_500", "2018_11_05");
     //console.log( "ROSTER:", this.state.Roster );
     
     this.checkRoster( UIN, "UIN" );
@@ -216,12 +221,14 @@ class App extends Component {
             </div>
           </div>
         </div>
+        <br/>
         <div id = "wrapCenter"> 
           <div id = "center">
             <Submitbutton
               onClick = { () => this.handleClick() }
             />
-            <div>UIN:{UIN}</div>
+            <div><b>UIN:</b>{UIN}</div>
+            <br/>
             <Numpad
               onClick = {i => this.handleNumpad(i)}
             />
@@ -233,7 +240,7 @@ class App extends Component {
               autoFocus = {true}
               ref = "MMM"
               onChange = {() => this.handleCardReader()}
-              className = "hidden"
+              className = "commando"
             />
           </div>
         </div>

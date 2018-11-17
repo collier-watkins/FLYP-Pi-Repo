@@ -1,3 +1,6 @@
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+
 // Calls API
 export function callApi(url = '', data = {}, type = '') {
 	return fetch(url, {
@@ -40,7 +43,7 @@ export function callApi(url = '', data = {}, type = '') {
 //          Functions for calling API
 ///////////////////////////////////////////////////////
 export function testApi() {
-    callApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api', {test: "test"}, "PUT")
+    callApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api', {test: "test"}, "POST")
       .then(data => console.log(data.message))
       .catch(error => console.error(error));
 }
@@ -93,7 +96,7 @@ export function trackAttendance(studUin, courseName, date) {
     .catch(error => console.error(error));
 }
 
-let getAttendance = (courseName) => {
+export function getAttendance(courseName) {
     callApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api/attendance' + courseName, {}, "GET")
       .then(data => {
         console.log(data);
@@ -102,7 +105,7 @@ let getAttendance = (courseName) => {
       .catch(error => console.error(error));
 }
 
-export function getRoster(courseName) {
+export function getRoster(courseName){
     callApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api/roster' + courseName, {}, "GET")
       .then(data => {
         console.log(data);
@@ -111,8 +114,7 @@ export function getRoster(courseName) {
       .catch(error => console.error(error));
 }
 
-/*
-let login = (uin) => {
+export function login(uin) {
   callApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api/login/' + uin, {}, "GET")
     .then(data => {
       console.log(data);
@@ -120,4 +122,3 @@ let login = (uin) => {
     })
     .catch(error => console.error(error));
 }
-*/

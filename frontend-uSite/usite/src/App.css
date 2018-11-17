@@ -6,15 +6,18 @@
 }
 
 .numPad {
-  border: 2px solid #999;
-  border-radius: 5px;
+  border: 3px solid #999;
+  border-radius: 8px;
   background: white;
   font-size: large;
-  padding: 5px;
+  padding: 8px;
+  margin: 4px;
 }
 
-.hidden {
+.commando {
   color: white;
+  padding-right: 50px;
+  padding-left: 50px;
 }
 
 .bottomHUD {
@@ -37,6 +40,8 @@
 
 .Submitbutton {
   margin-bottom: 10px;
+  border: 5px solid #999;
+  border-radius: 12px;
   padding: 10px;
   background: green;
   color: white;
