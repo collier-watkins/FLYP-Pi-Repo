@@ -54,13 +54,15 @@ export function testApi() {
       .catch(error => console.error(error));
 }
 
-export function login(uin) {
-  callGetApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api/login/' + uin, "GET")
+export default login = (uin) => {
+  return new Promise ((resolve, reject) => {
+    callGetApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api/login/' + uin, "GET")
     .then(data => {
       console.log(data);
-      return data;
+      resolve(data);
     })
     .catch(error => console.error(error));
+  });
 }
 
 export function addClass(courseName, profUin) {
