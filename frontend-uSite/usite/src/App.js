@@ -3,7 +3,13 @@ import "./App.css";
 import * as api from "./apiCalls.js";
 import * as IDparse from "./IDparse.js";
 
-// When we insert a sutdent, save their card ID as null for now
+// TODO: Link UIN to card readers upon unrecognized card reader input
+// ----> checkRoster()
+// TODO: Double check the control flow: Prof login --> track attendence --> Prof logout
+// ----> checkRoster() and double check the states we are reseting
+// TODO: Find a better place to pull the current professors from
+// ----> Not componentDidMount() b/c internet connectivity could be shoddy
+// ----> If no prof roster is pulled then we need to poll for it every couple of seconds
 
 class ClassList extends Component {
 
@@ -118,6 +124,7 @@ class App extends Component {
       UIN: "",
       CardReader: "",
       tracking: false,
+      linking: false,
       prof: {},
       currClass: "FLYP",
       date: "",
@@ -157,23 +164,6 @@ class App extends Component {
 
     });
     
-    /*
-    api.login( UIN ).then(data => {
-
-      console.log( "Login Data", data.data );
-    
-    });
-    */
-
-    /*
-    api.getRoster("CSCE_121_500").then(data => {
-
-      // nice
-      this.setState({ Roster: data.data });
-
-    });
-    */
-
     //this.setState( prevState => ({ tracking: !prevState.tracking }) );
 
   }
@@ -181,6 +171,7 @@ class App extends Component {
   fetchClasses() {
 
     const profUIN = this.state.prof.uin;
+
     api.getCourses( profUIN ).then( data => {
 
       console.log( "Profs courses:", data.data );
@@ -209,9 +200,22 @@ class App extends Component {
       tracking: !prevState.tracking,
       currClass: chosenClass
     }));
+
+    const currentDate = this.state.date;
+    api.addAttendanceDay( chosenClass, currentDate );
+
+    const currClass = this.state.currClass;
+    console.log( "Pulling student roster for: " + currClass );
+
+    api.getRoster( currClass ).then(data => {
+
+      this.setState({ Roster: data.data });
+
+    });
     
   }
 
+  // Im so sorry
   checkRoster( cardValue, inputType ) {
     
     console.log( "Checking roster..." );
@@ -221,6 +225,11 @@ class App extends Component {
     const theClass = this.state.currClass;
     const tracking = this.state.tracking;
     const profUIN = this.state.prof.uin;
+    const linking = this.state.linking;
+
+    let recognizedCard = false;
+    let parsedCard = "";
+    let linkingStatus = false;
 
     if( inputType === "UIN" ) {
 
@@ -234,7 +243,7 @@ class App extends Component {
         console.log( "Tracking Stopped, Prof logged out" );
         this.setState( prevState => ({
           tracking: !prevState.tracking,
-          currClass: "",
+          currClass: "FLYP",
           items: [],
           prof: {}
         }));
@@ -251,7 +260,16 @@ class App extends Component {
 
           if( rosterUIN === inputUIN ) {
 
-            if( tracking === true ) {
+            if( linking === true ) {
+
+              console.log( "Linking UIN " + inputUIN + " to card value: " + parsedCard );
+              api.updateCardOrRfid( inputUIN, parsedCard );
+              this.setState({ linking: false });
+              linkingStatus = true;
+
+            }
+
+            else if( tracking === true ) {
 
               console.log( "Welcome to the class buddy" );
               api.trackAttendance( inputUIN, theClass, date );
@@ -287,14 +305,22 @@ class App extends Component {
 
       }
 
+      if( linkingStatus === false && linking === true ) {
+
+        console.log( "User failed linking UIN to card value" );
+        this.setState({ linking: false });
+
+      }
+
     }
 
-    else if( inputType === "CardReader" ) {
+    else if( inputType === "CardReader" && linking === false ) {
       
       if( IDparse.magParser( cardValue, true ) === true ) {
 
         console.log( "Mag Stripe input" );
         let parsedMagID = IDparse.magParser( cardValue, false );
+        parsedCard = parsedMagID;
         console.log( "Parsed MagID: " + parsedMagID );
 
         for( let i = 0; i < Roster.length; ++i ) {
@@ -303,6 +329,8 @@ class App extends Component {
           console.log( "Card Number:" + cardNum );
 
           if( cardNum === parsedMagID ) {
+
+            recognizedCard = true;
 
             if( tracking === true ) {
 
@@ -344,6 +372,7 @@ class App extends Component {
 
         console.log( "RFID input" );
         let parsedRFID = IDparse.rfidParser( cardValue, false );
+        parsedCard = parsedRFID;
         console.log( "Parsed RFID: " + parsedRFID );
 
         for( let i = 0; i < Roster.length; ++i ) {
@@ -352,6 +381,8 @@ class App extends Component {
           console.log( "cardNum" + cardNum );
 
           if( cardNum === parsedRFID ) {
+
+            recognizedCard = true;
 
             if( tracking === true ) {
 
@@ -386,6 +417,16 @@ class App extends Component {
           }
 
         }
+
+      }
+
+      else if( recognizedCard === false ) {
+
+        console.log( "Unrecognized Card: " + parsedCard );
+        this.setState({
+          linking: true,
+          cardReader: parsedCard
+        });
 
       }
 
@@ -442,7 +483,7 @@ class App extends Component {
     
     const cardReaderValue = this.refs.MMM.value;
     console.log( "Captured Card Reader: " + cardReaderValue );
-    this.setState({ CardReader: cardReaderValue });
+    //this.setState({ CardReader: cardReaderValue });
 
   }
 
@@ -468,6 +509,7 @@ class App extends Component {
     const UIN = this.state.UIN;
     const trackingStatus = this.state.tracking;
     const items = this.state.items;
+    const linking = this.state.linking;
 
     return (
 
@@ -496,6 +538,13 @@ class App extends Component {
             <div>
               If you do not have your student ID, enter your UIN and tap submit. 
             </div>
+          </div>
+        </div>
+
+        <div id = "wrapCenter" className = "linkingCard" hidden = {!linking}>
+          <b>Unrecognized MagStripe or RFID card input</b> 
+          <div>
+            please input your UIN using the keypad to link it to your card.  
           </div>
         </div>
 
