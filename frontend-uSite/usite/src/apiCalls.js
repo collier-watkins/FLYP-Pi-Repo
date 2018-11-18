@@ -22,10 +22,10 @@ function callGetApi(url = '' ){
 
   On AWS:
 
-  *) let data = login(profUin);
+  *) login(profUin);
     data.courses[0].course_id, data.courses[l].course_id, etc.
-  *) addStudent("111001111", "Curtis", "Green");
   *) addProfessor("222002222", "notCurtis", "notGreen");
+  *) addStudent("111001111", "Curtis", "Green");
   *) addClass("CSCE_121_500", "222002222");
   *) addStudentToClass("CSCE_121_500", "111001111");
   *) let csv = getAttendance("CSCE_121_500");
@@ -34,11 +34,26 @@ function callGetApi(url = '' ){
 
 
   On the pi:
-
+  *) getProfessors()
+    [
+    { uin: '999009999',
+      firstName: 'prof_first',
+      lastName: 'prof_last',
+      cardNum: null,
+      rfidNum: '123' }, 
+      { uin: '999009999',
+      firstName: 'prof_first',
+      lastName: 'prof_last',
+      cardNum: null,
+      rfidNum: '123' }
+      ]
+  *)  login(profUin);
+    data.courses[0].course_id, data.courses[l].course_id, etc.
   *) let roster = getRoster("CSCE_121_500");
     roster[0].uin, roster[0].firstName, roster[0].lastName, roster[0].cardNum, 
     roster[0].rfidNum, roster[1].uin, etc.
   *) addAttendanceDay("CSCE_121_500", "2018_11_14");
+  *) updateCardOrRfid(uin, card);
   *) let data = trackAttendance("111001111", "CSCE_121_500", "2018_11_14");
       increases attendance for student and returns:
       data.num_attended, data.num_class_days
@@ -135,9 +150,20 @@ function updateCardOrRfid(uin, card) {
     .catch(error => console.error(error));
 }
 
+let getProfessors = () => {
+  return new Promise ((resolve, reject) => {
+    callGetApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api/professor/', "GET")
+        .then(data => {
+        console.log(data);
+        resolve(data);
+      })
+      .catch(error => console.error(error));
+  });
+}
+
 //export default api;
 module.exports = {
   testApi, login, addClass, addAttendanceDay, addStudent,
   addStudentToClass, addProfessor, trackAttendance, getAttendance,
-  getRoster, updateCardOrRfid
+  getRoster, updateCardOrRfid, getProfessors
 };
