@@ -22,7 +22,9 @@ function callGetApi(url = '' ){
 
   On AWS:
 
-  *) login(profUin);
+  *) profExists(profUin);
+    true/false
+  *) getCourses(profUin);
     data.courses[0].course_id, data.courses[l].course_id, etc.
   *) addProfessor("222002222", "notCurtis", "notGreen");
   *) addStudent("111001111", "Curtis", "Green");
@@ -69,9 +71,20 @@ function testApi() {
       .catch(error => console.error(error));
 }
 
-let login = (uin) => {
+let professorExists = (uin) => {
   return new Promise ((resolve, reject) => {
-    callGetApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api/login/' + uin, "GET")
+    callGetApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api/professor/' + uin + '/exists', "GET")
+    .then(data => {
+      console.log(data);
+      resolve(data);
+    })
+    .catch(error => console.error(error));
+  });
+}
+
+let getCourses = (uin) => {
+  return new Promise ((resolve, reject) => {
+    callGetApi('http://ec2-18-222-100-183.us-east-2.compute.amazonaws.com:3001/api/professor/' + uin + '/courses', "GET")
     .then(data => {
       console.log(data);
       resolve(data);
