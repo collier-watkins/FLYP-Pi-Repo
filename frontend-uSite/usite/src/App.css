@@ -47,6 +47,16 @@
   font-size: large;
 }
 
+.classButton {
+  margin: 5px;
+  border: 2px solid #999;
+  border-radius: 5px;
+  padding: 10px;
+  background: red;
+  color: white;
+  font-size: large;
+}
+
 .Header {
   color: red;
   text-align: center;

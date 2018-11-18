@@ -7,15 +7,23 @@ import * as IDparse from "./IDparse.js";
 
 class ClassList extends Component {
 
+  handleClick(i) {
+    this.props.onClick(i);
+  }
+
   render() {
     return(
-
       <ul>
         {this.props.items.map( item => (
-          <li key = {item.id}>{item.text}</li>
+          <button 
+            className = "classButton"
+            key = {item.text}
+            onClick = {() => this.handleClick(item.text)}
+          >
+            {item.text}
+          </button>
         ))}
       </ul>
-
     );
   }
 
@@ -105,12 +113,13 @@ class App extends Component {
     this.handleClick = this.handleClick.bind(this);
     this.handleNumpad = this.handleNumpad.bind(this);
     this.handleCardReader = this.handleCardReader.bind(this);
+    this.handleSelectedClass = this.handleSelectedClass.bind(this);
     this.state = {
       UIN: "",
       CardReader: "",
       tracking: false,
       prof: {},
-      class: "",
+      currClass: "FLYP",
       date: "",
       items: [],
       Roster: [{}] 
@@ -171,21 +180,17 @@ class App extends Component {
 
   fetchClasses() {
 
-
-    console.log( "FINISH ME" );
-
     const profUIN = this.state.prof.uin;
     api.getCourses( profUIN ).then( data => {
 
       console.log( "Profs courses:", data.data );
       for( let i = 0; i < data.data.length; ++i ) {
 
-        let newItem = {
+        const className = data.data[i].course_id;
+        const key = className;
+        console.log( "Adding class:" + className );
 
-          text: data.data[i],
-          id: Date.now()
-
-        }
+        const newItem = { text: className, key: key };
 
         this.setState( prevState => ({ 
           items: prevState.items.concat( newItem )
@@ -196,56 +201,85 @@ class App extends Component {
 
   }
 
+  handleSelectedClass( chosenClass ) {
+
+    console.log( "Chose class: " + chosenClass );
+
+    this.setState( prevState => ({ 
+      tracking: !prevState.tracking,
+      currClass: chosenClass
+    }));
+    
+  }
+
   checkRoster( cardValue, inputType ) {
     
     console.log( "Checking roster..." );
 
     const Roster = this.state.Roster;
     const date = this.state.date;
-    const theClass = this.state.class;
+    const theClass = this.state.currClass;
     const tracking = this.state.tracking;
+    const profUIN = this.state.prof.uin;
 
     if( inputType === "UIN" ) {
+
+      const inputUIN = cardValue;
 
       console.log( "UIN input: " + Roster.length );
       console.log( "ROSTER:", Roster);
 
-      for( let i = 0; i < Roster.length; ++i ) {
+      if( profUIN === inputUIN ) {
 
-        const rosterUIN = Roster[i].uin;
-        const inputUIN = cardValue;
+        console.log( "Tracking Stopped, Prof logged out" );
+        this.setState( prevState => ({
+          tracking: !prevState.tracking,
+          currClass: "",
+          items: [],
+          prof: {}
+        }));
 
-        console.log( "Roster uin:" + rosterUIN );
+      }
 
-        if( rosterUIN === inputUIN ) {
+      else {
 
-          if( tracking === true ) {
+        for( let i = 0; i < Roster.length; ++i ) {
 
-            console.log( "Welcome to the class buddy" );
-            api.trackAttendance( inputUIN, theClass, date );
+          const rosterUIN = Roster[i].uin;
 
-          }
+          console.log( "Roster uin:" + rosterUIN );
 
-          else {
+          if( rosterUIN === inputUIN ) {
 
-            api.professorExists( inputUIN ).then( data => {
+            if( tracking === true ) {
 
-              const existance = data.data;
+              console.log( "Welcome to the class buddy" );
+              api.trackAttendance( inputUIN, theClass, date );
 
-              if( existance === true ) {
+            }
 
-                console.log( "Prof login:", data );
-                this.setState( prevState => ({
-                  prof: Roster[i],
-                  tracking: !prevState.tracking
+            else {
 
-                }));
+              api.professorExists( inputUIN ).then( data => {
 
-                this.fetchClasses();
+                const existance = data.data;
 
-              }
+                if( existance === true ) {
 
-            });
+                  console.log( "Prof login:", data );
+                  this.setState( prevState => ({
+                    prof: Roster[i],
+                    //tracking: !prevState.tracking
+
+                  }));
+
+                  this.fetchClasses();
+
+                }
+
+              });
+
+            }
 
           }
 
@@ -288,7 +322,7 @@ class App extends Component {
                   console.log( "Prof login:", data );
                   this.setState( prevState => ({
                     prof: Roster[i],
-                    tracking: !prevState.tracking
+                    //tracking: !prevState.tracking
 
                   }));
 
@@ -337,7 +371,7 @@ class App extends Component {
                   console.log( "Prof login:", data );
                   this.setState( prevState => ({
                     prof: Roster[i],
-                    tracking: !prevState.tracking
+                    //tracking: !prevState.tracking
 
                   }));
 
@@ -373,7 +407,6 @@ class App extends Component {
     
     //api.testApi();
     
-    const tracking = this.state.tracking;
     const UIN = this.state.UIN;
 
 
@@ -390,7 +423,6 @@ class App extends Component {
 
     this.refs.MMM.focus();
     const cardReaderValue = this.refs.MMM.value;
-    const tracking = this.state.tracking;
 
     // Increase interval if the whole card reader is not caputred
     if( cardReaderValue !== "" ) {
@@ -432,16 +464,17 @@ class App extends Component {
 
   render() {
 
-    const className = "CSCE 121";
+    const currClass = this.state.currClass;
     const UIN = this.state.UIN;
     const trackingStatus = this.state.tracking;
+    const items = this.state.items;
 
     return (
 
       <div>
 
         <div className = "Header">
-          Welcome to: {className}
+          Welcome to: {currClass}
         </div>
 
         <div id = "wrapCenter" className = "topHUD" hidden = {trackingStatus}>
@@ -451,7 +484,8 @@ class App extends Component {
               If you do not have your student ID, enter your UIN and tap submit. 
             </div>
             <ClassList
-              items = {this.state.items}
+              items = {items}
+              onClick = {i => this.handleSelectedClass(i)}
             />
           </div>
         </div>
