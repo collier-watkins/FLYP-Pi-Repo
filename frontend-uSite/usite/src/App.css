@@ -20,31 +20,42 @@
 }
 
 .bottomHUD {
-  background: cyan;
+  background: #500000;
   padding-top: 5px;
   padding-bottom: 5px;
+  color: white;
 }
 
 .topHUD {
-  background: cyan;
+  background: #500000;
   padding-top: 5px;
   padding-bottom: 5px;
+  color: white; 
 }
 
 .UINform {
-  border: 1px dashed black;
+  border: 2px solid #dbdbdb;
   margin-top: 10px;
+  margin-bottom: 5px;
   resize: none;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: normal;
+  color: #4d4d4d;
+  border-radius: 6px;
+  padding: 0.5rem;
+  height: 1.4375rem;
 }
 
 .Submitbutton {
   margin-bottom: 10px;
-  border: 5px solid #999;
-  border-radius: 12px;
-  padding: 15px;
-  background: green;
-  color: white;
+  padding: 10px;
   font-size: large;
+  border-radius: 16px;
+  color: #500000;
+  background-color: #f8cf66;
+  border-color: #370000;
+  border: 3px solid;
 }
 
 .classButton {
