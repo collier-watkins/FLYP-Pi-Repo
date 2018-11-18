@@ -10,6 +10,7 @@ import * as IDparse from "./IDparse.js";
 // TODO: Find a better place to pull the current professors from
 // ----> Not componentDidMount() b/c internet connectivity could be shoddy
 // ----> If no prof roster is pulled then we need to poll for it every couple of seconds
+// TODO: If the commando textarea input is less than 8, dont capture that data 
 
 class ClassList extends Component {
 
@@ -87,7 +88,6 @@ class Numpad extends Component {
           {this.renderButton(0)}
         </div>
         <div>
-          <br/>
           {this.renderButton("clear")}
         </div>
       </div>
@@ -204,10 +204,9 @@ class App extends Component {
     const currentDate = this.state.date;
     api.addAttendanceDay( chosenClass, currentDate );
 
-    const currClass = this.state.currClass;
-    console.log( "Pulling student roster for: " + currClass );
+    console.log( "Pulling student roster for: " + chosenClass );
 
-    api.getRoster( currClass ).then(data => {
+    api.getRoster( chosenClass ).then(data => {
 
       this.setState({ Roster: data.data });
 
@@ -238,7 +237,7 @@ class App extends Component {
       console.log( "UIN input: " + Roster.length );
       console.log( "ROSTER:", Roster);
 
-      if( profUIN === inputUIN ) {
+      if( profUIN === inputUIN && tracking === true ) {
 
         console.log( "Tracking Stopped, Prof logged out" );
         this.setState( prevState => ({
@@ -569,11 +568,6 @@ class App extends Component {
               onChange = {() => this.handleCardReader()}
               className = "commando"
             />
-          </div>
-        </div>
-        <div id = "wrapCenter" className = "bottomHUD">
-          <div id = "center">
-            Welcome NAME
           </div>
         </div>
 
