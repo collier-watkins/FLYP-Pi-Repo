@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import "./App.css";
 import * as api from "./apiCalls.js";
-//import api from "./apiCalls.js";
 import * as IDparse from "./IDparse.js";
 
 // When we insert a sutdent, save their card ID as null for now
@@ -94,10 +93,10 @@ class App extends Component {
       UIN: "",
       CardReader: "",
       tracking: false,
-      prof: "",
+      prof: [],
       class: "",
       date: "",
-      Roster: [] // array of objects
+      Roster: [{}] 
     };
 
   }
@@ -106,28 +105,119 @@ class App extends Component {
 
     console.log( "Mounted" );
     this.interval = setInterval( () => this.tick(), 300 );
+    this.checkProf();
 
   }
 
-  checkProf() {
+  checkProf( ) {
     
-    console.log( "NOTYET" );
+    let date = new Date();
+    const YYYY = date.getFullYear();
+    const MM = date.getMonth() + 1; // Jan = 0
+    const DD = date.getDate();
+    let YYYY_MM_DD = YYYY + '_' + MM + '_' + DD;
+    this.setState({ date: YYYY_MM_DD });
+
     // Check Prof
     // If valid get their classes
     // -- Display their classes
     // Based on their selection, get that classes roster
     // Flip boolean tracking
     // Start class
+    
+    api.getProfessors().then( data => {
+
+      this.setState({ Roster: data.professors });
+
+    });
+    
+    /*
+    api.login( UIN ).then(data => {
+
+      console.log( "Login Data", data.data );
+    
+    });
+    */
+
+    /*
+    api.getRoster("CSCE_121_500").then(data => {
+
+      // nice
+      this.setState({ Roster: data.data });
+
+    });
+    */
+
+    //this.setState( prevState => ({ tracking: !prevState.tracking }) );
 
   }
 
-  checkStudentRoster( cardValue, inputType ) {
+  fetchClasses() {
+
+    console.log( "Finish me" );
+    const profUIN = this.state.prof.uin;
+    api.getCourses().then( data => {
+
+    });
+
+  }
+
+  checkRoster( cardValue, inputType ) {
     
     console.log( "Checking roster..." );
 
+    const Roster = this.state.Roster;
+    const date = this.state.date;
+    const theClass = this.state.class;
+    const tracking = this.state.tracking;
+
     if( inputType === "UIN" ) {
 
-      console.log( "UIN input" );
+      console.log( "UIN input: " + Roster.length );
+      console.log( "ROSTER:", Roster);
+
+      for( let i = 0; i < Roster.length; ++i ) {
+
+        const rosterUIN = Roster[i].uin;
+        const inputUIN = cardValue;
+
+        console.log( "Roster uin:" + rosterUIN );
+
+        if( rosterUIN === inputUIN ) {
+
+          if( tracking === true ) {
+
+            console.log( "Welcome to the class buddy" );
+            api.trackAttendance( inputUIN, theClass, date );
+
+          }
+
+          else {
+
+            api.professorExists( inputUIN ).then( data => {
+
+              const existance = data.data;
+
+              if( existance === true ) {
+
+                console.log( "Prof login:", data );
+                this.setState( prevState => ({
+                  prof: Roster[i],
+                  tracking: !prevState.tracking
+
+                }));
+
+                this.fetchClasses();
+
+              }
+
+            });
+
+          }
+
+        }
+
+      }
 
     }
 
@@ -139,20 +229,46 @@ class App extends Component {
         let parsedMagID = IDparse.magParser( cardValue, false );
         console.log( "Parsed MagID: " + parsedMagID );
 
-        const Roster = this.state.Roster;
-        Roster.forEach( function( item ) {
+        for( let i = 0; i < Roster.length; ++i ) {
 
-          const cardNum = item.cardNum;
+          const cardNum = Roster[i].cardNum;
           console.log( "Card Number:" + cardNum );
 
           if( cardNum === parsedMagID ) {
 
-            // record attendance
-            console.log( "Attendance recorded" );
+            if( tracking === true ) {
+
+              console.log( "Attendance recorded" );
+              api.trackAttendance( parsedMagID, theClass, date );
+
+            }
+
+            else {
+
+              api.professorExists( parsedMagID ).then( data => {
+
+                const existance = data.data;
+
+                if( existance === true ) {
+
+                  console.log( "Prof login:", data );
+                  this.setState( prevState => ({
+                    prof: Roster[i],
+                    tracking: !prevState.tracking
+
+                  }));
+
+                  this.fetchClasses();
+
+                }
+
+              });
+
+            }
 
           }
 
-        });
+        }
 
       }
 
@@ -161,6 +277,47 @@ class App extends Component {
         console.log( "RFID input" );
         let parsedRFID = IDparse.rfidParser( cardValue, false );
         console.log( "Parsed RFID: " + parsedRFID );
+
+        for( let i = 0; i < Roster.length; ++i ) {
+
+          const cardNum = Roster[i].cardNum;
+          console.log( "cardNum" + cardNum );
+
+          if( cardNum === parsedRFID ) {
+
+            if( tracking === true ) {
+
+              console.log( "Attendance recorded" );
+              api.trackAttendance( parsedRFID, theClass, date );
+
+            }
+
+            else {
+
+              api.professorExists( parsedRFID ).then( data => {
+
+                const existance = data.data;
+
+                if( existance === true ) {
+
+                  console.log( "Prof login:", data );
+                  this.setState( prevState => ({
+                    prof: Roster[i],
+                    tracking: !prevState.tracking
+
+                  }));
+
+                  this.fetchClasses();
+
+                }
+
+              });
+
+            }
+
+          }
+
+        }
 
       }
 
@@ -175,40 +332,44 @@ class App extends Component {
   }
 
   handleClick() {
-    const UIN = this.state.UIN;
-    console.log( "Submit button clicked, captured value = " + UIN );
 
-    api.login( "999009999" ).then(data => {
 
-      console.log( "Login Data", data );
-    
-    });
+    //api.addStudentToClass( "CSCE_121_500", "523002492" );
+    //api.updateCardOrRfid( "523002492", "03317156" );
     
     //api.testApi();
-    //this.setState({ Roster: api.getRoster( "CSCE_121_500" ) });
-    let Roster = api.getRoster( "CSCE_121_500" );
-    console.log( "Roster:", Roster );
-    this.setState({ Roster: Roster });
-    //api.trackAttendance("888008988", "CSCE_121_500", "2018_11_05");
-    //console.log( "ROSTER:", this.state.Roster );
     
-    this.checkStudentRoster( UIN, "UIN" );
+    const tracking = this.state.tracking;
+    const UIN = this.state.UIN;
+
+
+    console.log( "Submit button clicked, captured value = " + UIN );
+
+    this.checkRoster( UIN, "UIN" );
 
     // Clear the UIN when we are done
     this.setState({ UIN: "" });
+
   }
 
   tick(){
 
     this.refs.MMM.focus();
     const cardReaderValue = this.refs.MMM.value;
+    const tracking = this.state.tracking;
 
     // Increase interval if the whole card reader is not caputred
     if( cardReaderValue !== "" ) {
+
       console.log( "Sent: " + cardReaderValue );
-      this.checkStudentRoster( cardReaderValue, "CardReader" );
+
+      //if( tracking === true )
+
+      this.checkRoster( cardReaderValue, "CardReader" );
+
       this.refs.MMM.value = "";
       this.setState({ UIN: "" });
+
     }
 
   }

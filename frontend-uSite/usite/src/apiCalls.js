@@ -176,7 +176,7 @@ let getProfessors = () => {
 
 //export default api;
 module.exports = {
-  testApi, login, addClass, addAttendanceDay, addStudent,
+  testApi, getCourses, addClass, addAttendanceDay, addStudent,
   addStudentToClass, addProfessor, trackAttendance, getAttendance,
-  getRoster, updateCardOrRfid, getProfessors
+  getRoster, updateCardOrRfid, getProfessors, professorExists
 };
