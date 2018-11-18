@@ -5,6 +5,22 @@ import * as IDparse from "./IDparse.js";
 
 // When we insert a sutdent, save their card ID as null for now
 
+class ClassList extends Component {
+
+  render() {
+    return(
+
+      <ul>
+        {this.props.items.map( item => (
+          <li key = {item.id}>{item.text}</li>
+        ))}
+      </ul>
+
+    );
+  }
+
+}
+
 class NumpadButton extends Component {
 
   render() {
@@ -93,9 +109,10 @@ class App extends Component {
       UIN: "",
       CardReader: "",
       tracking: false,
-      prof: [],
+      prof: {},
       class: "",
       date: "",
+      items: [],
       Roster: [{}] 
     };
 
@@ -154,9 +171,26 @@ class App extends Component {
 
   fetchClasses() {
 
-    console.log( "Finish me" );
+
+    console.log( "FINISH ME" );
+
     const profUIN = this.state.prof.uin;
-    api.getCourses().then( data => {
+    api.getCourses( profUIN ).then( data => {
+
+      console.log( "Profs courses:", data.data );
+      for( let i = 0; i < data.data.length; ++i ) {
+
+        let newItem = {
+
+          text: data.data[i],
+          id: Date.now()
+
+        }
+
+        this.setState( prevState => ({ 
+          items: prevState.items.concat( newItem )
+        }));
+      }
 
     });
 
@@ -363,8 +397,6 @@ class App extends Component {
 
       console.log( "Sent: " + cardReaderValue );
 
-      //if( tracking === true )
-
       this.checkRoster( cardReaderValue, "CardReader" );
 
       this.refs.MMM.value = "";
@@ -418,6 +450,9 @@ class App extends Component {
             <div>
               If you do not have your student ID, enter your UIN and tap submit. 
             </div>
+            <ClassList
+              items = {this.state.items}
+            />
           </div>
         </div>
 
