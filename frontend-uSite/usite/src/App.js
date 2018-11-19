@@ -9,7 +9,7 @@ import * as IDparse from "./IDparse.js";
 // TODO: If prof has no classes, let em know
 // TODO: Remove the attendanceStatus student name on an interval
 // TODO: why cant the prof sign in with a magID input?
-// TODO: UX work - notify user on invalid UIN input
+// TODO: when linking, let that card input be the attendance
 
 class ClassList extends Component {
 
@@ -205,6 +205,26 @@ class App extends Component {
     
   }
 
+  trackAttendance( inputID, theClass, date, student ) {
+
+    api.trackAttendance( inputID, theClass, date ).then( data => {
+
+      //data.num_attended data.num_class_days
+      const attendanceRecord = data.num_attended;
+      console.log( "Attendance Record:", attendanceRecord );
+      const message = "Attendance Recorded! : " + student + " -- Days attended: " + attendanceRecord;
+      this.setState({ 
+        student: student,
+        attendanceStatus: true,
+        inputStatus: message
+      });
+
+      this.resetErrorMsg();
+
+    });
+
+  }
+
   // Im so sorry
   checkRoster( cardValue, inputType ) {
     
@@ -220,7 +240,6 @@ class App extends Component {
     let recognizedCard = false;
     let parsedCard = "";
     let linkingStatus = false;
-    let linkingState = linking;
 
     if( inputType === "UIN" ) {
 
@@ -258,14 +277,15 @@ class App extends Component {
             if( linking === true ) {
 
               const cardReader = this.state.cardReader;
-              console.log( "Linking UIN " + inputUIN + " to card value: " + cardReader );
+              const message = "Linking UIN: " + inputUIN + " to ID: " + cardReader;
               api.updateCardOrRfid( inputUIN, cardReader );
+
               this.setState({ 
                 linking: false,
-                inputStatus: "Linking ID to UIN"
+                inputStatus: message
               });
+
               linkingStatus = true;
-              linkingState = false;
               this.resetErrorMsg();
 
               // Update local roster
@@ -276,20 +296,17 @@ class App extends Component {
                 Roster[i].cardNum = cardReader;
               }
 
+              // Is this okay?
+              const student = Roster[i].firstName;
+              this.trackAttendance( inputUIN, theClass, date, student );
+
             }
 
             else if( tracking === true ) {
 
               console.log( "Welcome to the class buddy" );
-              api.trackAttendance( inputUIN, theClass, date );
-              const uinStudent = Roster[i].firstName;
-              this.setState({ 
-                student: uinStudent,
-                attendanceStatus: true,
-                inputStatus: "Attendance Recorded!"
-              });
-
-              this.resetErrorMsg();
+              const student = Roster[i].firstName;
+              this.trackAttendance( inputUIN, theClass, date, student );
 
             }
 
@@ -308,6 +325,7 @@ class App extends Component {
                   });
 
                   this.fetchClasses();
+                  this.resetErrorMsg();
 
                 }
 
@@ -321,10 +339,15 @@ class App extends Component {
 
       }
 
-      if( linkingStatus === false && ( linking === true || linkingState === true ) ) {
+      if( linkingStatus === false && linking === true ) {
 
         console.log( "User failed linking UIN to card value" );
-        this.setState({ linking: false });
+        const message = "ID link failed";
+        this.setState({ 
+          linking: false,
+          trackingStatus: message
+        });
+        this.resetErrorMsg();
 
       }
 
@@ -351,15 +374,8 @@ class App extends Component {
             if( tracking === true ) {
 
               console.log( "Attendance recorded" );
-              api.trackAttendance( parsedMagID, theClass, date );
-              const uinStudent = Roster[i].firstName;
-              this.setState({ 
-                student: uinStudent,
-                attendanceStatus: true,
-                inputStatus: "Attendance Recorded!"
-              });
-
-              this.resetErrorMsg();
+              const student = Roster[i].firstName;
+              this.trackAttendance( parsedMagID, theClass, date, student );
 
             }
 
@@ -411,14 +427,8 @@ class App extends Component {
             if( tracking === true ) {
 
               console.log( "Attendance recorded" );
-              api.trackAttendance( parsedRFID, theClass, date );
-              const uinStudent = Roster[i].firstName;
-              this.setState({ 
-                student: uinStudent,
-                attendanceStatus: true,
-                inputStatus: "Attendance Recorded!"
-              });
-              this.resetErrorMsg();
+              const student = Roster[i].firstName;
+              this.trackAttendance( parsedRFID, theClass, date, student );
 
             }
 
@@ -459,6 +469,7 @@ class App extends Component {
           cardReader: parsedCard,
           inputStatus: "Unrecognized Card"
         });
+
         this.resetErrorMsg();
 
       }
@@ -526,7 +537,7 @@ class App extends Component {
 
       this.setState({ inputStatus: " " });
     
-    }, 2500 );
+    }, 3000 );
     
   }
 
@@ -562,7 +573,6 @@ class App extends Component {
     const items = this.state.items;
     const linking = this.state.linking;
     const attendanceStatus = this.state.attendanceStatus;
-    const student = this.state.student;
     const inputStatus = this.state.inputStatus;
 
     return (
@@ -600,10 +610,6 @@ class App extends Component {
           <div>
             please input your UIN using the keypad to link it to your card.  
           </div>
-        </div>
-
-        <div id = "wrapCenter" className = "linkingCard" hidden = {!attendanceStatus}>
-          <b>Attendance Recorded: </b> {student}
         </div>
 
         <div id = "wrapCenter">
