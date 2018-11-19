@@ -8,7 +8,9 @@
 
 - Foreman
 
-- node-hid
+- electron-rebuild
+
+- electron-packager
 
 ``` console
 $ npm install --save-dev {dependencies}

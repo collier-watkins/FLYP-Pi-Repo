@@ -18,7 +18,8 @@
     "electron-start": "node src/electron-wait-react",
     "react-start": "react-scripts start",
     "postinstall": "electron-rebuild --force",
-    "package-linux": "electron-packager . --overwrite --asar=true --platform=linux --arch=x64 --icon=public/favicon.ico --prune=true --out=release-builds"
+    "package-linux": "electron-packager . --overwrite --asar=true --platform=linux --arch=x64 --icon=public/favicon.ico --prune=true --out=release-builds",
+    "create-debian-installer": "electron-installer-debian --src release-builds/usite-linux-x64/ --arch armv7l --config debian.json"
   },
   "eslintConfig": {
     "extends": "react-app"
