@@ -69,11 +69,11 @@
 }
 
 .Header {
-  color: red;
+  color: #800000;
   text-align: center;
   text-shadow: 1px 1px 1px black;
   background: linear-gradient(to bottom, rgba(0,0,0,0.25), rgba(0,0,0,0.1));
-  padding: 3px;
+  padding: 4px;
   box-shadow: inset 2px 2px 5px rgba(0,0,0,0.5), inset -2px -2px 5px rgba(255, 255, 255, 0.5);
 }
 
