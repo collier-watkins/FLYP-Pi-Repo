@@ -8,6 +8,7 @@ import * as IDparse from "./IDparse.js";
 // ----> If no prof roster is pulled then we need to poll for it every couple of seconds
 // TODO: If prof has no classes, let em know
 // TODO: Remove the attendanceStatus student name on an interval
+// TODO: why cant the prof sign in with a magID input?
 
 class ClassList extends Component {
 
