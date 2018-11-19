@@ -8,13 +8,14 @@ import * as IDparse from "./IDparse.js";
 // ----> If no prof roster is pulled then we need to poll for it every couple of seconds
 // TODO: If prof has no classes, let em know
 // TODO: Remove the attendanceStatus student name on an interval
-// TODO: why cant the prof sign in with a magID input?
 // TODO: when linking, let that card input be the attendance
 // TODO: Prof swips will send that card swipe and it should send the UIN
 // TODO: Let Prof sign out by card
 // TODO: Put prof swipes and student swipes into their own functions
 // ----> Close class is being called from students sometimes
 // TODO: Unrecognized cards cause the class to end
+// ----> Also bad card reads could be causing issues
+// TODO: RFID linking not working locally, probly need to update the roster
 
 class ClassList extends Component {
 
@@ -284,17 +285,19 @@ class App extends Component {
               const cardReader = this.state.cardReader;
               let message = "Trying Card link";
 
+              console.log( "Card Reader:", cardReader );
+
               // Update local roster
-              if( cardReader.length === 8 ) {
+              if( cardReader[0] === "r" && cardReader.length === 9 ) {
                 Roster[i].rfidNum = cardReader;
                 api.updateCardOrRfid( inputUIN, cardReader );
-                message = "Linking UIN: " + inputUIN + " to ID: " + cardReader;
+                message = "Linking UIN: " + inputUIN + " to RFID: " + cardReader;
                 linkingStatus = true;
               }
-              else if( cardReader.length > 10) {
+              else if( cardReader[0] === "m" && cardReader.length > 11) { // mightbe 16
                 Roster[i].cardNum = cardReader;
                 api.updateCardOrRfid( inputUIN, cardReader );
-                message = "Linking UIN: " + inputUIN + " to ID: " + cardReader;
+                message = "Linking UIN: " + inputUIN + " to magID: " + cardReader;
                 linkingStatus = true;
               }
               else {
@@ -369,7 +372,7 @@ class App extends Component {
       if( IDparse.magParser( cardValue, true ) === true ) {
 
         console.log( "Mag Stripe input" );
-        let parsedMagID = IDparse.magParser( cardValue, false );
+        let parsedMagID = "m" + IDparse.magParser( cardValue, false );
         parsedCard = parsedMagID;
         console.log( "Parsed MagID: " + parsedMagID );
 
@@ -431,7 +434,7 @@ class App extends Component {
       else if( IDparse.rfidParser( cardValue, true ) === true ) {
 
         console.log( "RFID input" );
-        let parsedRFID = IDparse.rfidParser( cardValue, false );
+        let parsedRFID = "r" + IDparse.rfidParser( cardValue, false );
         parsedCard = parsedRFID;
         console.log( "Parsed RFID: " + parsedRFID );
 
