@@ -219,6 +219,7 @@ class App extends Component {
     let recognizedCard = false;
     let parsedCard = "";
     let linkingStatus = false;
+    let linkingState = linking;
 
     if( inputType === "UIN" ) {
 
@@ -258,9 +259,10 @@ class App extends Component {
               api.updateCardOrRfid( inputUIN, cardReader );
               this.setState({ linking: false });
               linkingStatus = true;
+              linkingState = false;
 
               // Update local roster
-              if( cardReader.length < 10 ) {
+              if( cardReader.length <= 8 ) {
                 Roster[i].rfidNum = cardReader;
               }
               else {
@@ -310,7 +312,7 @@ class App extends Component {
 
       }
 
-      if( linkingStatus === false && linking === true ) {
+      if( linkingStatus === false && ( linking === true || linkingState === true ) ) {
 
         console.log( "User failed linking UIN to card value" );
         this.setState({ linking: false });
@@ -575,19 +577,21 @@ class App extends Component {
             <Submitbutton
               onClick = { () => this.handleClick() }
             />
+
+            <div>
+              <input 
+                type = "text"
+                hidden = {false}
+                autoFocus = {true}
+                ref = "MMM"
+                onChange = {() => this.handleCardReader()}
+                className = "commando"
+              />
+            </div>
+
             <div><b>UIN:</b>{UIN}</div>
             <Numpad
               onClick = {i => this.handleNumpad(i)}
-            />
-          </div>
-          <div>
-            <input 
-              type = "text"
-              hidden = {false}
-              autoFocus = {true}
-              ref = "MMM"
-              onChange = {() => this.handleCardReader()}
-              className = "commando"
             />
           </div>
         </div>
