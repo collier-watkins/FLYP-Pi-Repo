@@ -296,9 +296,9 @@ class App extends Component {
                 Roster[i].cardNum = cardReader;
               }
 
-              // Is this okay?
-              const student = Roster[i].firstName;
-              this.trackAttendance( inputUIN, theClass, date, student );
+              // Is this okay? No
+              //const student = Roster[i].firstName;
+              //this.trackAttendance( inputUIN, theClass, date, student );
 
             }
 
