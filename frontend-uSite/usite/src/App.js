@@ -278,23 +278,24 @@ class App extends Component {
 
             if( linking === true ) {
 
+              const cardReader = this.state.cardReader;
+              let message = "Trying Card link";
+
               // Update local roster
               if( cardReader.length === 8 ) {
                 Roster[i].rfidNum = cardReader;
                 api.updateCardOrRfid( inputUIN, cardReader );
-                const cardReader = this.state.cardReader;
-                const message = "Linking UIN: " + inputUIN + " to ID: " + cardReader;
+                message = "Linking UIN: " + inputUIN + " to ID: " + cardReader;
                 linkingStatus = true;
               }
               else if( cardReader.length > 10) {
                 Roster[i].cardNum = cardReader;
                 api.updateCardOrRfid( inputUIN, cardReader );
-                const cardReader = this.state.cardReader;
-                const message = "Linking UIN: " + inputUIN + " to ID: " + cardReader;
+                message = "Linking UIN: " + inputUIN + " to ID: " + cardReader;
                 linkingStatus = true;
               }
               else {
-                const message = "Bad read, try linking ID again";
+                message = "Bad read, try linking ID again";
               }
 
               this.setState({ 
