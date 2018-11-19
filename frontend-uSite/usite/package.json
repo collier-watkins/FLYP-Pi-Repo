@@ -1,5 +1,7 @@
 {
   "name": "usite",
+  "description": "FLYP",
+  "author": "FLYP",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -18,8 +20,11 @@
     "electron-start": "node src/electron-wait-react",
     "react-start": "react-scripts start",
     "postinstall": "electron-rebuild --force",
-    "package-linux": "electron-packager . --overwrite --asar=true --platform=linux --arch=x64 --icon=public/favicon.ico --prune=true --out=release-builds",
-    "create-debian-installer": "electron-installer-debian --src release-builds/usite-linux-x64/ --arch armv7l --config debian.json"
+    "package-linux": "electron-packager . FLYP --overwrite --asar=true --platform=linux --arch=armv7l --icon=public/favicon.ico --prune=true --out=release-builds",
+    "create-debian-installer": "electron-installer-debian --src release-builds/FLYP-linux-armv7l/ --arch armv7l --config debian.json",
+    "pack": "build --dir",
+    "dist": "npm run build && build",
+    "postinstall": "install-app-deps"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -32,8 +37,18 @@
   ],
   "devDependencies": {
     "electron": "^3.0.7",
+    "electron-builder": "^20.36.2",
     "electron-packager": "^12.2.0",
     "electron-rebuild": "^1.8.2",
     "foreman": "^3.0.1"
+  },
+  "build": {
+    "appId": "com.electron.electron-with-create-react-app",
+    "win": {
+      "iconUrl": "https://cdn2.iconfinder.com/data/icons/designer-skills/128/react-256.png"
+    },
+    "directories": {
+      "buildResources": "public"
+    }
   }
 }

@@ -6,6 +6,8 @@ import * as IDparse from "./IDparse.js";
 // TODO: Find a better place to pull the current professors from
 // ----> Not componentDidMount() b/c internet connectivity could be shoddy
 // ----> If no prof roster is pulled then we need to poll for it every couple of seconds
+// TODO: If prof has no classes, let em know
+// TODO: Remove the attendanceStatus student name on an interval
 
 class ClassList extends Component {
 
