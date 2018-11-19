@@ -3,14 +3,11 @@ import "./App.css";
 import * as api from "./apiCalls.js";
 import * as IDparse from "./IDparse.js";
 
-// TODO: Link UIN to card readers upon unrecognized card reader input
-// ----> checkRoster()
-// TODO: Double check the control flow: Prof login --> track attendence --> Prof logout
-// ----> checkRoster() and double check the states we are reseting
 // TODO: Find a better place to pull the current professors from
 // ----> Not componentDidMount() b/c internet connectivity could be shoddy
 // ----> If no prof roster is pulled then we need to poll for it every couple of seconds
 // TODO: If the commando textarea input is less than 8, dont capture that data 
+// TODO: If tracking goes from true to false, recall checkProf()
 
 class ClassList extends Component {
 
@@ -125,6 +122,7 @@ class App extends Component {
       CardReader: "",
       tracking: false,
       linking: false,
+      attendanceStatus: false,
       prof: {},
       currClass: "FLYP",
       date: "",
@@ -150,21 +148,12 @@ class App extends Component {
     const DD = date.getDate();
     let YYYY_MM_DD = YYYY + '_' + MM + '_' + DD;
     this.setState({ date: YYYY_MM_DD });
-
-    // Check Prof
-    // If valid get their classes
-    // -- Display their classes
-    // Based on their selection, get that classes roster
-    // Flip boolean tracking
-    // Start class
     
     api.getProfessors().then( data => {
 
       this.setState({ Roster: data.professors });
 
     });
-    
-    //this.setState( prevState => ({ tracking: !prevState.tracking }) );
 
   }
 
@@ -247,6 +236,8 @@ class App extends Component {
           prof: {}
         }));
 
+        this.checkProf();
+
       }
 
       else {
@@ -255,16 +246,25 @@ class App extends Component {
 
           const rosterUIN = Roster[i].uin;
 
-          console.log( "Roster uin:" + rosterUIN );
+          console.log( "Roster uin: " + rosterUIN );
 
           if( rosterUIN === inputUIN ) {
 
             if( linking === true ) {
 
-              console.log( "Linking UIN " + inputUIN + " to card value: " + parsedCard );
-              api.updateCardOrRfid( inputUIN, parsedCard );
+              const cardReader = this.state.cardReader;
+              console.log( "Linking UIN " + inputUIN + " to card value: " + cardReader );
+              api.updateCardOrRfid( inputUIN, cardReader );
               this.setState({ linking: false });
               linkingStatus = true;
+
+              // Update local roster
+              if( cardReader.length < 10 ) {
+                Roster[i].rfidNum = cardReader;
+              }
+              else {
+                Roster[i].cardNum = cardReader;
+              }
 
             }
 
@@ -419,7 +419,7 @@ class App extends Component {
 
       }
 
-      else if( recognizedCard === false ) {
+      if( recognizedCard === false ) {
 
         console.log( "Unrecognized Card: " + parsedCard );
         this.setState({
@@ -429,30 +429,26 @@ class App extends Component {
 
       }
 
-      else {
-
-        console.error( "Invalid card read" );
-
-      }
-
     }
 
   }
 
   handleClick() {
 
-
-    //api.addStudentToClass( "CSCE_121_500", "523002492" );
-    //api.updateCardOrRfid( "523002492", "03317156" );
-    
-    //api.testApi();
-    
     const UIN = this.state.UIN;
 
+    if( UIN.length === 9 ) {
 
-    console.log( "Submit button clicked, captured value = " + UIN );
+      console.log( "Submit button clicked, captured value = " + UIN );
 
-    this.checkRoster( UIN, "UIN" );
+      this.checkRoster( UIN, "UIN" );
+
+    }
+
+    else {
+      console.log( "UIN input length is not 9, try again" );
+      this.setState({ linking: false });
+    }
 
     // Clear the UIN when we are done
     this.setState({ UIN: "" });
@@ -465,7 +461,7 @@ class App extends Component {
     const cardReaderValue = this.refs.MMM.value;
 
     // Increase interval if the whole card reader is not caputred
-    if( cardReaderValue !== "" ) {
+    if( cardReaderValue.length >= 8 ) {
 
       console.log( "Sent: " + cardReaderValue );
 
@@ -474,6 +470,10 @@ class App extends Component {
       this.refs.MMM.value = "";
       this.setState({ UIN: "" });
 
+    }
+
+    else {
+      this.refs.MMM.value = "";
     }
 
   }
@@ -509,6 +509,7 @@ class App extends Component {
     const trackingStatus = this.state.tracking;
     const items = this.state.items;
     const linking = this.state.linking;
+    const attendanceStatus = this.state.attendanceStatus;
 
     return (
 
@@ -547,6 +548,10 @@ class App extends Component {
           </div>
         </div>
 
+        <div id = "wrapCenter" className = "linkingCard" hidden = {!attendanceStatus}>
+          <b>Attendance Recorded</b> 
+        </div>
+
         <br/>
         <div id = "wrapCenter"> 
           <div id = "center">
@@ -554,7 +559,6 @@ class App extends Component {
               onClick = { () => this.handleClick() }
             />
             <div><b>UIN:</b>{UIN}</div>
-            <br/>
             <Numpad
               onClick = {i => this.handleNumpad(i)}
             />
