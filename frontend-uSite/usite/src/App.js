@@ -7,21 +7,24 @@ import * as IDparse from "./IDparse.js";
 // 1. How do we power off the device? exec call from react?
 // 2. Card swipe timeout to prevent someone from busting too many card swipes for their buds
 // 3. Better UX for displaying the status of the tracker
-// 4. Super stretch goal of displaying student signin pictures, but really dont focus on this
+// 4. Logic to deny attendance entries for the same student for the same day
+// 5. Deb installer from Electron ( Pi3 is armhf, not armv7l(?) )
+// ...
+// oo. Super stretch goal of displaying student signin pictures, but really dont focus on this
 
+// TODO: when linking, let that card input be the attendance (HIGHEST PRIORITY)
+//
 // TODO: Find a better place to pull the current professors from
 // ----> Not componentDidMount() b/c internet connectivity could be shoddy
 // ----> If no prof roster is pulled then we need to poll for it every couple of seconds
+//
 // TODO: If prof has no classes, let em know
-// TODO: Remove the attendanceStatus student name on an interval
-// TODO: when linking, let that card input be the attendance
-// TODO: Prof swips will send that card swipe and it should send the UIN
-// TODO: Let Prof sign out by card
+//
 // TODO: Put prof swipes and student swipes into their own functions
 // ----> Close class is being called from students sometimes
+//
 // TODO: Unrecognized cards cause the class to end
-// ----> Also bad card reads could be causing issues
-// TODO: RFID linking not working locally, probly need to update the roster
+// ----> Is this fixed?
 
 class ClassList extends Component {
 
