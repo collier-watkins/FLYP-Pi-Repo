@@ -495,7 +495,7 @@ class App extends Component {
 
       if( recognizedCard === false ) {
 
-        const message = "Unrecognized Card: " + parsedCard;
+        let message = "Unrecognized Card: " + parsedCard;
 
         if(IDparse.rfidParser( cardValue, true ) === true || IDparse.magParser( cardValue, true ) === true ) {
 
