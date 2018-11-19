@@ -458,7 +458,7 @@ class App extends Component {
 
         for( let i = 0; i < Roster.length; ++i ) {
 
-          const cardNum = Roster[i].cardNum;
+          const cardNum = Roster[i].rfidNum; // OMG
           console.log( "RFID cardNum: " + cardNum );
 
           if( cardNum === parsedRFID ) {
