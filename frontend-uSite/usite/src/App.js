@@ -511,6 +511,7 @@ class App extends Component {
 
           this.setState({
             linking: false,
+            cardReader: parsedCard,
             inputStatus: message
           });
 
