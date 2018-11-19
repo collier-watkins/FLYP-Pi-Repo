@@ -84,8 +84,6 @@ class Numpad extends Component {
         </div>
         <div>
           {this.renderButton(0)}
-        </div>
-        <div>
           {this.renderButton("clear")}
         </div>
       </div>
