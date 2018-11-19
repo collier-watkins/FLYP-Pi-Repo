@@ -17,6 +17,7 @@
 .commando {
   color: white;
   border: 1px solid white;
+  outline: none;
 }
 
 .bottomHUD {

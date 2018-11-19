@@ -6,8 +6,6 @@ import * as IDparse from "./IDparse.js";
 // TODO: Find a better place to pull the current professors from
 // ----> Not componentDidMount() b/c internet connectivity could be shoddy
 // ----> If no prof roster is pulled then we need to poll for it every couple of seconds
-// TODO: If the commando textarea input is less than 8, dont capture that data 
-// TODO: If tracking goes from true to false, recall checkProf()
 
 class ClassList extends Component {
 
@@ -123,6 +121,7 @@ class App extends Component {
       tracking: false,
       linking: false,
       attendanceStatus: false,
+      student: "",
       prof: {},
       currClass: "FLYP",
       date: "",
@@ -272,6 +271,11 @@ class App extends Component {
 
               console.log( "Welcome to the class buddy" );
               api.trackAttendance( inputUIN, theClass, date );
+              const uinStudent = Roster[i].firstName;
+              this.setState({ 
+                student: uinStudent,
+                attendanceStatus: true
+              });
 
             }
 
@@ -335,6 +339,11 @@ class App extends Component {
 
               console.log( "Attendance recorded" );
               api.trackAttendance( parsedMagID, theClass, date );
+              const uinStudent = Roster[i].firstName;
+              this.setState({ 
+                student: uinStudent,
+                attendanceStatus: true
+              });
 
             }
 
@@ -387,6 +396,11 @@ class App extends Component {
 
               console.log( "Attendance recorded" );
               api.trackAttendance( parsedRFID, theClass, date );
+              const uinStudent = Roster[i].firstName;
+              this.setState({ 
+                student: uinStudent,
+                attendanceStatus: true
+              });
 
             }
 
@@ -510,6 +524,7 @@ class App extends Component {
     const items = this.state.items;
     const linking = this.state.linking;
     const attendanceStatus = this.state.attendanceStatus;
+    const student = this.state.student;
 
     return (
 
@@ -549,7 +564,7 @@ class App extends Component {
         </div>
 
         <div id = "wrapCenter" className = "linkingCard" hidden = {!attendanceStatus}>
-          <b>Attendance Recorded</b> 
+          <b>Attendance Recorded: </b> {student}
         </div>
 
         <br/>
