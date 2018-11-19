@@ -14,6 +14,7 @@ import * as IDparse from "./IDparse.js";
 // TODO: Let Prof sign out by card
 // TODO: Put prof swipes and student swipes into their own functions
 // ----> Close class is being called from students sometimes
+// TODO: Unrecognized cards cause the class to end
 
 class ClassList extends Component {
 
@@ -372,7 +373,7 @@ class App extends Component {
         parsedCard = parsedMagID;
         console.log( "Parsed MagID: " + parsedMagID );
 
-        if( parsedMagID === this.state.prof.cardNum && tracking === true ) {
+        if( parsedMagID === this.state.prof.cardNum && tracking === true && linking === false ) {
 
           console.log( "Tracking Stopped, Prof logged out" );
           this.setState( prevState => ({
@@ -434,7 +435,7 @@ class App extends Component {
         parsedCard = parsedRFID;
         console.log( "Parsed RFID: " + parsedRFID );
 
-        if( parsedRFID === this.state.prof.rfidNum && tracking === true ) {
+        if( parsedRFID === this.state.prof.rfidNum && tracking === true && linking === false ) {
 
           console.log( "Tracking Stopped, Prof logged out" );
           this.setState( prevState => ({
