@@ -10,6 +10,8 @@ import * as IDparse from "./IDparse.js";
 // TODO: Remove the attendanceStatus student name on an interval
 // TODO: why cant the prof sign in with a magID input?
 // TODO: when linking, let that card input be the attendance
+// TODO: Prof swips will send that card swipe and it should send the UIN
+// TODO: Let Prof sign out by card
 
 class ClassList extends Component {
 
@@ -296,7 +298,7 @@ class App extends Component {
                 Roster[i].cardNum = cardReader;
               }
 
-              // Is this okay? No
+              // Is this okay? Only if Prof table & student tabels are separate
               //const student = Roster[i].firstName;
               //this.trackAttendance( inputUIN, theClass, date, student );
 
@@ -367,7 +369,23 @@ class App extends Component {
           const cardNum = Roster[i].cardNum;
           console.log( "Card Number:" + cardNum );
 
-          if( cardNum === parsedMagID ) {
+          if( parsedMagID === this.state.prof.cardNum && tracking === true ) {
+
+            console.log( "Tracking Stopped, Prof logged out" );
+            this.setState( prevState => ({
+              tracking: !prevState.tracking,
+              currClass: "FLYP",
+              inputStatus: "Logging out...",
+              items: [],
+              prof: {}
+            }));
+
+            this.resetErrorMsg();
+            this.checkProf();
+
+          }
+
+          else if( cardNum === parsedMagID ) {
 
             recognizedCard = true;
 
@@ -381,24 +399,13 @@ class App extends Component {
 
             else {
 
-              api.professorExists( parsedMagID ).then( data => {
-
-                const existance = data.data;
-
-                if( existance === true ) {
-
-                  console.log( "Prof login:", data );
-                  this.setState({
-                    prof: Roster[i],
-                    inputStatus: "Logging in..."
-                  });
-
-                  this.resetErrorMsg();
-                  this.fetchClasses();
-
-                }
-
+              this.setState({
+                prof: Roster[i],
+                inputStatus: "Logging in..."
               });
+
+              this.resetErrorMsg();
+              this.fetchClasses();
 
             }
 
@@ -432,7 +439,7 @@ class App extends Component {
 
             }
 
-            else {
+            /*else {
 
               api.professorExists( parsedRFID ).then( data => {
 
@@ -453,7 +460,7 @@ class App extends Component {
 
               });
 
-            }
+            }*/
 
           }
 
@@ -463,11 +470,11 @@ class App extends Component {
 
       if( recognizedCard === false ) {
 
-        console.log( "Unrecognized Card: " + parsedCard );
+        const message = "Unrecognized Card: " + parsedCard;
         this.setState({
           linking: true,
           cardReader: parsedCard,
-          inputStatus: "Unrecognized Card"
+          inputStatus: message
         });
 
         this.resetErrorMsg();
@@ -544,7 +551,7 @@ class App extends Component {
   handleCardReader() {
     
     const cardReaderValue = this.refs.MMM.value;
-    console.log( "Captured Card Reader: " + cardReaderValue );
+    //console.log( "Captured Card Reader: " + cardReaderValue );
     //this.setState({ CardReader: cardReaderValue });
 
   }
@@ -553,7 +560,6 @@ class App extends Component {
     if( i === "clear" ) {
       const newValue = ""
       this.setState({ UIN: newValue });
-      console.log( "State Change, new state value = " + newValue );
     }
     else if( this.state.UIN.length === 9 ) {
       console.log( "Too long" );
@@ -561,7 +567,6 @@ class App extends Component {
     else {
       const newValue = this.state.UIN + i;
       this.setState({ UIN: newValue });
-      console.log( "State Change, new state value = " + newValue );
     }
   }
 
