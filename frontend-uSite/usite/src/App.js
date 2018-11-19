@@ -393,7 +393,8 @@ class App extends Component {
 
               console.log( "Attendance recorded" );
               const student = Roster[i].firstName;
-              this.trackAttendance( parsedMagID, theClass, date, student );
+              const studentUIN = Roster[i].uin;
+              this.trackAttendance( studentUIN, theClass, date, student );
 
             }
 
@@ -431,36 +432,42 @@ class App extends Component {
 
             recognizedCard = true;
 
+            if( parsedRFID === this.state.prof.rfidNum && tracking === true ) {
+
+              console.log( "Tracking Stopped, Prof logged out" );
+              this.setState( prevState => ({
+                tracking: !prevState.tracking,
+                currClass: "FLYP",
+                inputStatus: "Logging out...",
+                items: [],
+                prof: {}
+              }));
+
+              this.resetErrorMsg();
+              this.checkProf();
+
+            }
+
             if( tracking === true ) {
 
               console.log( "Attendance recorded" );
               const student = Roster[i].firstName;
-              this.trackAttendance( parsedRFID, theClass, date, student );
+              const studentUIN = Roster[i].uin;
+              this.trackAttendance( studentUIN, theClass, date, student );
 
             }
 
-            /*else {
+            else {
 
-              api.professorExists( parsedRFID ).then( data => {
-
-                const existance = data.data;
-
-                if( existance === true ) {
-
-                  console.log( "Prof login:", data );
-                  this.setState({
-                    prof: Roster[i],
-                    inputStatus: "Logging in..."
-                  });
-
-                  this.resetErrorMsg();
-                  this.fetchClasses();
-
-                }
-
+              this.setState({
+                prof: Roster[i],
+                inputStatus: "Logging in..."
               });
 
-            }*/
+              this.resetErrorMsg();
+              this.fetchClasses();
+
+            }
 
           }
 
