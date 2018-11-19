@@ -496,11 +496,27 @@ class App extends Component {
       if( recognizedCard === false ) {
 
         const message = "Unrecognized Card: " + parsedCard;
-        this.setState({
-          linking: false,
-          cardReader: parsedCard,
-          inputStatus: message
-        });
+
+        if(IDparse.rfidParser( cardValue, true ) === true || IDparse.magParser( cardValue, true ) === true ) {
+
+          this.setState({
+            linking: true,
+            cardReader: parsedCard,
+            inputStatus: message
+          });
+
+        }
+
+        else {
+
+          this.setState({
+            linking: false,
+            inputStatus: message
+          });
+
+          message = message + " -- Bad Read, try again";
+
+        }
 
         this.resetErrorMsg();
 
