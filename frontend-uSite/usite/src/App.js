@@ -278,25 +278,30 @@ class App extends Component {
 
             if( linking === true ) {
 
-              const cardReader = this.state.cardReader;
-              const message = "Linking UIN: " + inputUIN + " to ID: " + cardReader;
-              api.updateCardOrRfid( inputUIN, cardReader );
+              // Update local roster
+              if( cardReader.length === 8 ) {
+                Roster[i].rfidNum = cardReader;
+                api.updateCardOrRfid( inputUIN, cardReader );
+                const cardReader = this.state.cardReader;
+                const message = "Linking UIN: " + inputUIN + " to ID: " + cardReader;
+                linkingStatus = true;
+              }
+              else if( cardReader.length > 10) {
+                Roster[i].cardNum = cardReader;
+                api.updateCardOrRfid( inputUIN, cardReader );
+                const cardReader = this.state.cardReader;
+                const message = "Linking UIN: " + inputUIN + " to ID: " + cardReader;
+                linkingStatus = true;
+              }
+              else {
+                const message = "Bad read, try linking ID again";
+              }
 
               this.setState({ 
                 linking: false,
                 inputStatus: message
               });
-
-              linkingStatus = true;
               this.resetErrorMsg();
-
-              // Update local roster
-              if( cardReader.length <= 8 ) {
-                Roster[i].rfidNum = cardReader;
-              }
-              else {
-                Roster[i].cardNum = cardReader;
-              }
 
               // Is this okay? Only if Prof table & student tabels are separate
               //const student = Roster[i].firstName;
