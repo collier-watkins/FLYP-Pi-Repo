@@ -408,7 +408,8 @@ class App extends Component {
 
             }
 
-            else if( parsedMagID === this.state.prof.cardNum && tracking === false ) {
+            //else if( parsedMagID === this.state.prof.cardNum && tracking === false ) {
+            else {
 
               this.setState({
                 prof: Roster[i],
@@ -469,7 +470,8 @@ class App extends Component {
 
             }
 
-            else if( parsedRFID === this.state.prof.rfidNum && tracking === false ) {
+            //else if( parsedRFID === this.state.prof.rfidNum && tracking === false ) {
+            else {
 
               this.setState({
                 prof: Roster[i],
