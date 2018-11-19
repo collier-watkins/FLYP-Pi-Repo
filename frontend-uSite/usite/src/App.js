@@ -397,7 +397,7 @@ class App extends Component {
         for( let i = 0; i < Roster.length; ++i ) {
 
           const cardNum = Roster[i].cardNum;
-          console.log( "Card Number:" + cardNum );
+          console.log( "magID cardNum: " + cardNum );
 
           if( cardNum === parsedMagID ) {
 
@@ -459,7 +459,7 @@ class App extends Component {
         for( let i = 0; i < Roster.length; ++i ) {
 
           const cardNum = Roster[i].cardNum;
-          console.log( "cardNum" + cardNum );
+          console.log( "RFID cardNum: " + cardNum );
 
           if( cardNum === parsedRFID ) {
 
@@ -497,7 +497,7 @@ class App extends Component {
 
         const message = "Unrecognized Card: " + parsedCard;
         this.setState({
-          linking: true,
+          linking: false,
           cardReader: parsedCard,
           inputStatus: message
         });
@@ -548,7 +548,7 @@ class App extends Component {
     // Increase interval if the whole card reader is not caputred
     if( cardReaderValue.length >= 8 ) {
 
-      console.log( "Sent: " + cardReaderValue );
+      console.log( "Sent Raw Card: " + cardReaderValue );
 
       this.checkRoster( cardReaderValue, "CardReader" );
 
