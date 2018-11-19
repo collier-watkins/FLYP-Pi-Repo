@@ -3,6 +3,12 @@ import "./App.css";
 import * as api from "./apiCalls.js";
 import * as IDparse from "./IDparse.js";
 
+// Demo Presentation TODO's
+// 1. How do we power off the device? exec call from react?
+// 2. Card swipe timeout to prevent someone from busting too many card swipes for their buds
+// 3. Better UX for displaying the status of the tracker
+// 4. Super stretch goal of displaying student signin pictures, but really dont focus on this
+
 // TODO: Find a better place to pull the current professors from
 // ----> Not componentDidMount() b/c internet connectivity could be shoddy
 // ----> If no prof roster is pulled then we need to poll for it every couple of seconds
