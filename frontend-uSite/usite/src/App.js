@@ -12,6 +12,8 @@ import * as IDparse from "./IDparse.js";
 // TODO: when linking, let that card input be the attendance
 // TODO: Prof swips will send that card swipe and it should send the UIN
 // TODO: Let Prof sign out by card
+// TODO: Put prof swipes and student swipes into their own functions
+// ----> Close class is being called from students sometimes
 
 class ClassList extends Component {
 
@@ -370,28 +372,30 @@ class App extends Component {
         parsedCard = parsedMagID;
         console.log( "Parsed MagID: " + parsedMagID );
 
+        if( parsedMagID === this.state.prof.cardNum && tracking === true ) {
+
+          console.log( "Tracking Stopped, Prof logged out" );
+          this.setState( prevState => ({
+            tracking: !prevState.tracking,
+            currClass: "FLYP",
+            inputStatus: "Logging out...",
+            items: [],
+            prof: {}
+          }));
+
+          this.resetErrorMsg();
+          this.checkProf();
+
+          return;
+
+        }
+
         for( let i = 0; i < Roster.length; ++i ) {
 
           const cardNum = Roster[i].cardNum;
           console.log( "Card Number:" + cardNum );
 
-          if( parsedMagID === this.state.prof.cardNum && tracking === true ) {
-
-            console.log( "Tracking Stopped, Prof logged out" );
-            this.setState( prevState => ({
-              tracking: !prevState.tracking,
-              currClass: "FLYP",
-              inputStatus: "Logging out...",
-              items: [],
-              prof: {}
-            }));
-
-            this.resetErrorMsg();
-            this.checkProf();
-
-          }
-
-          else if( cardNum === parsedMagID ) {
+          if( cardNum === parsedMagID ) {
 
             recognizedCard = true;
 
@@ -404,7 +408,7 @@ class App extends Component {
 
             }
 
-            else {
+            else if( parsedMagID === this.state.prof.cardNum && tracking === false ) {
 
               this.setState({
                 prof: Roster[i],
@@ -429,6 +433,24 @@ class App extends Component {
         parsedCard = parsedRFID;
         console.log( "Parsed RFID: " + parsedRFID );
 
+        if( parsedRFID === this.state.prof.rfidNum && tracking === true ) {
+
+          console.log( "Tracking Stopped, Prof logged out" );
+          this.setState( prevState => ({
+            tracking: !prevState.tracking,
+            currClass: "FLYP",
+            inputStatus: "Logging out...",
+            items: [],
+            prof: {}
+          }));
+
+          this.resetErrorMsg();
+          this.checkProf();
+
+          return;
+
+        }
+
         for( let i = 0; i < Roster.length; ++i ) {
 
           const cardNum = Roster[i].cardNum;
@@ -437,22 +459,6 @@ class App extends Component {
           if( cardNum === parsedRFID ) {
 
             recognizedCard = true;
-
-            if( parsedRFID === this.state.prof.rfidNum && tracking === true ) {
-
-              console.log( "Tracking Stopped, Prof logged out" );
-              this.setState( prevState => ({
-                tracking: !prevState.tracking,
-                currClass: "FLYP",
-                inputStatus: "Logging out...",
-                items: [],
-                prof: {}
-              }));
-
-              this.resetErrorMsg();
-              this.checkProf();
-
-            }
 
             if( tracking === true ) {
 
@@ -463,7 +469,7 @@ class App extends Component {
 
             }
 
-            else {
+            else if( parsedRFID === this.state.prof.rfidNum && tracking === false ) {
 
               this.setState({
                 prof: Roster[i],
