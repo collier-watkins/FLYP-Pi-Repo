@@ -64,9 +64,10 @@
   border: 2px solid #999;
   border-radius: 5px;
   padding: 10px;
-  background: red;
-  color: white;
+  background: #f8cf66;
+  color: #500000;
   font-size: large;
+  border-color: white;
 }
 
 .Header {
