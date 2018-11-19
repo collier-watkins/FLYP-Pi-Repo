@@ -3,7 +3,8 @@
 
 export function magParser(rawData, test){
 
-  var regexFull = /[%]([0-9]{16})\?([;+]\1\?([+]\1\?)?)?/;
+  //var regexFull = /[%]([0-9]{16})\?([;+]\1\?([+]\1\?)?)?/;
+  var regexFull = /[\+%](\d){16}/;
 
   var result = regexFull.test(rawData);
 
