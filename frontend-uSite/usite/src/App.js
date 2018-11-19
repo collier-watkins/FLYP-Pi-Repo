@@ -9,6 +9,7 @@ import * as IDparse from "./IDparse.js";
 // TODO: If prof has no classes, let em know
 // TODO: Remove the attendanceStatus student name on an interval
 // TODO: why cant the prof sign in with a magID input?
+// TODO: UX work - notify user on invalid UIN input
 
 class ClassList extends Component {
 
@@ -126,6 +127,7 @@ class App extends Component {
       prof: {},
       currClass: "FLYP",
       date: "",
+      inputStatus: " ",
       items: [],
       Roster: [{}] 
     };
@@ -135,7 +137,7 @@ class App extends Component {
   componentDidMount() {
 
     console.log( "Mounted" );
-    this.interval = setInterval( () => this.tick(), 300 );
+    this.interval = setInterval( () => this.tick(), 500 );
     this.checkProf();
 
   }
@@ -233,10 +235,12 @@ class App extends Component {
         this.setState( prevState => ({
           tracking: !prevState.tracking,
           currClass: "FLYP",
+          inputStatus: "Logging out...",
           items: [],
           prof: {}
         }));
 
+        this.resetErrorMsg();
         this.checkProf();
 
       }
@@ -256,9 +260,13 @@ class App extends Component {
               const cardReader = this.state.cardReader;
               console.log( "Linking UIN " + inputUIN + " to card value: " + cardReader );
               api.updateCardOrRfid( inputUIN, cardReader );
-              this.setState({ linking: false });
+              this.setState({ 
+                linking: false,
+                inputStatus: "Linking ID to UIN"
+              });
               linkingStatus = true;
               linkingState = false;
+              this.resetErrorMsg();
 
               // Update local roster
               if( cardReader.length <= 8 ) {
@@ -277,8 +285,11 @@ class App extends Component {
               const uinStudent = Roster[i].firstName;
               this.setState({ 
                 student: uinStudent,
-                attendanceStatus: true
+                attendanceStatus: true,
+                inputStatus: "Attendance Recorded!"
               });
+
+              this.resetErrorMsg();
 
             }
 
@@ -291,11 +302,10 @@ class App extends Component {
                 if( existance === true ) {
 
                   console.log( "Prof login:", data );
-                  this.setState( prevState => ({
+                  this.setState({
                     prof: Roster[i],
-                    //tracking: !prevState.tracking
-
-                  }));
+                    trackingStatus: "Logging in..."
+                  });
 
                   this.fetchClasses();
 
@@ -345,8 +355,11 @@ class App extends Component {
               const uinStudent = Roster[i].firstName;
               this.setState({ 
                 student: uinStudent,
-                attendanceStatus: true
+                attendanceStatus: true,
+                inputStatus: "Attendance Recorded!"
               });
+
+              this.resetErrorMsg();
 
             }
 
@@ -359,12 +372,12 @@ class App extends Component {
                 if( existance === true ) {
 
                   console.log( "Prof login:", data );
-                  this.setState( prevState => ({
+                  this.setState({
                     prof: Roster[i],
-                    //tracking: !prevState.tracking
+                    inputStatus: "Logging in..."
+                  });
 
-                  }));
-
+                  this.resetErrorMsg();
                   this.fetchClasses();
 
                 }
@@ -402,8 +415,10 @@ class App extends Component {
               const uinStudent = Roster[i].firstName;
               this.setState({ 
                 student: uinStudent,
-                attendanceStatus: true
+                attendanceStatus: true,
+                inputStatus: "Attendance Recorded!"
               });
+              this.resetErrorMsg();
 
             }
 
@@ -416,12 +431,12 @@ class App extends Component {
                 if( existance === true ) {
 
                   console.log( "Prof login:", data );
-                  this.setState( prevState => ({
+                  this.setState({
                     prof: Roster[i],
-                    //tracking: !prevState.tracking
+                    inputStatus: "Logging in..."
+                  });
 
-                  }));
-
+                  this.resetErrorMsg();
                   this.fetchClasses();
 
                 }
@@ -441,8 +456,10 @@ class App extends Component {
         console.log( "Unrecognized Card: " + parsedCard );
         this.setState({
           linking: true,
-          cardReader: parsedCard
+          cardReader: parsedCard,
+          inputStatus: "Unrecognized Card"
         });
+        this.resetErrorMsg();
 
       }
 
@@ -463,8 +480,15 @@ class App extends Component {
     }
 
     else {
+
       console.log( "UIN input length is not 9, try again" );
-      this.setState({ linking: false });
+      this.setState({ 
+        linking: false,
+        inputStatus: "Invalid UIN input"
+      });
+
+      this.resetErrorMsg();
+
     }
 
     // Clear the UIN when we are done
@@ -476,6 +500,7 @@ class App extends Component {
 
     this.refs.MMM.focus();
     const cardReaderValue = this.refs.MMM.value;
+    //this.setState({ inputStatus: " " });
 
     // Increase interval if the whole card reader is not caputred
     if( cardReaderValue.length >= 8 ) {
@@ -493,6 +518,16 @@ class App extends Component {
       this.refs.MMM.value = "";
     }
 
+  }
+
+  resetErrorMsg() {
+
+    setTimeout( () => { 
+
+      this.setState({ inputStatus: " " });
+    
+    }, 2500 );
+    
   }
 
   handleCardReader() {
@@ -528,6 +563,7 @@ class App extends Component {
     const linking = this.state.linking;
     const attendanceStatus = this.state.attendanceStatus;
     const student = this.state.student;
+    const inputStatus = this.state.inputStatus;
 
     return (
 
@@ -568,6 +604,10 @@ class App extends Component {
 
         <div id = "wrapCenter" className = "linkingCard" hidden = {!attendanceStatus}>
           <b>Attendance Recorded: </b> {student}
+        </div>
+
+        <div id = "wrapCenter">
+          <b>{inputStatus}</b>
         </div>
 
         <br/>
