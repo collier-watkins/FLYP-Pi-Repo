@@ -17,7 +17,8 @@
     "electron": "electron .",
     "electron-start": "node src/electron-wait-react",
     "react-start": "react-scripts start",
-    "postinstall": "electron-rebuild --force"
+    "postinstall": "electron-rebuild --force",
+    "package-linux": "electron-packager . --overwrite --asar=true --platform=linux --arch=x64 --icon=public/favicon.ico --prune=true --out=release-builds"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -30,6 +31,7 @@
   ],
   "devDependencies": {
     "electron": "^3.0.7",
+    "electron-packager": "^12.2.0",
     "electron-rebuild": "^1.8.2",
     "foreman": "^3.0.1"
   }
