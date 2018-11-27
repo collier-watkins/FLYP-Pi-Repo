@@ -1,5 +1,6 @@
-// Must import 'forge-sha256/build/forge-sha256.min.js'
-//import p from "./forge-sha256/build/forge-sha256.min.js";
+// hash length is 64
+// total length is 65 b/c of appended "r" or "m"
+import * as crypto from "crypto";
 
 export function magParser(rawData, test){
 
@@ -16,9 +17,13 @@ export function magParser(rawData, test){
 
   else if( test === false ) {
 
+      const hash = crypto.createHash('sha256');
       var cardID = regexFull.exec(rawData)[1]; 
-      //return forge_sha256(cardID); //Hash card ID
-      return( cardID ); 
+      hash.update( cardID );
+      //const finalHash = "m" + hash.digest('hex');
+      const finalHash = hash.digest('hex');
+      console.log( "MagStripe hash:", finalHash );
+      return( finalHash ); 
 
   }
 
@@ -45,8 +50,13 @@ export function rfidParser( rawData, test ){
 
   else if( test === false ) {
 
+    const hash = crypto.createHash('sha256');
     var cardID = regexFull.exec(rawData)[1];
-    return( cardID );
+    hash.update( cardID );
+    //const finalHash = "r" + hash.digest('hex');
+    const finalHash = hash.digest('hex');
+    console.log( "RFID hash:", finalHash );
+    return( finalHash );
 
   }
 

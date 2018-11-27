@@ -152,7 +152,7 @@ class App extends Component {
   componentDidMount() {
 
     console.log( "Mounted" );
-    this.interval = setInterval( () => this.tick(), 500 );
+    this.interval = setInterval( () => this.tick(), 300 );
     this.checkProf();
 
   }
@@ -281,6 +281,7 @@ class App extends Component {
 
       else {
 
+        var UINFound = false;
         for( let i = 0; i < Roster.length; ++i ) {
 
           const rosterUIN = Roster[i].uin;
@@ -288,6 +289,7 @@ class App extends Component {
           console.log( "Roster uin: " + rosterUIN );
 
           if( rosterUIN === inputUIN ) {
+            UINFound = true;
 
             if( linking === true ) {
 
@@ -297,13 +299,13 @@ class App extends Component {
               console.log( "Card Reader:", cardReader );
 
               // Update local roster
-              if( cardReader[0] === "r" && cardReader.length === 9 ) {
+              if( cardReader[0] === "r" ) {//&& cardReader.length === 9 ) {
                 Roster[i].rfidNum = cardReader;
                 api.updateCardOrRfid( inputUIN, cardReader );
                 message = "Linking UIN: " + inputUIN + " to RFID: " + cardReader;
                 linkingStatus = true;
               }
-              else if( cardReader[0] === "m" && cardReader.length > 11) { // mightbe 16
+              else if( cardReader[0] === "m" ) {//&& cardReader.length > 11) { // mightbe 16
                 Roster[i].cardNum = cardReader;
                 api.updateCardOrRfid( inputUIN, cardReader );
                 message = "Linking UIN: " + inputUIN + " to magID: " + cardReader;
@@ -372,6 +374,16 @@ class App extends Component {
         });
         this.resetErrorMsg();
 
+      }
+
+      else if( UINFound === false ) {
+        console.log( "UIN not in database" );
+        const message = "UIN not found in roster";
+        this.setState({ 
+          linking: false,
+          trackingStatus: message
+        });
+        this.resetErrorMsg();
       }
 
     }
