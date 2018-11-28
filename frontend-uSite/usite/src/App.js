@@ -607,8 +607,8 @@ class App extends Component {
 
   resetErrorMsg() {
 
-    //setTimeout( () => { this.setState({ inputStatus: " " });}, 3000 ); // milliseconds
-    console.log( "resetErrorMsg() is VOIDED right now!!!" );
+    setTimeout( () => { this.setState({ inputStatus: " " });}, 3000 ); // milliseconds
+    //console.log( "resetErrorMsg() is VOIDED right now!!!" );
     
   }
 
