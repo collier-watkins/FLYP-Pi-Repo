@@ -14,6 +14,10 @@ import * as IDparse from "./IDparse.js";
 
 // TODO: when linking, let that card input be the attendance (HIGHEST PRIORITY)
 //
+// TODO: Fix the UX that tells if the input UIN is not in the roster
+//
+// TODO: Allow replacing an RFID or MagID link to UIN (somehow)
+//
 // TODO: Find a better place to pull the current professors from
 // ----> Not componentDidMount() b/c internet connectivity could be shoddy
 // ----> If no prof roster is pulled then we need to poll for it every couple of seconds
@@ -364,13 +368,15 @@ class App extends Component {
 
       }
 
+      // Both of these error messages are broken! FIXME
+      // !!!!!!
+
       if( linkingStatus === false && linking === true ) {
 
         console.log( "User failed linking UIN to card value" );
-        const message = "ID link failed";
         this.setState({ 
           linking: false,
-          trackingStatus: message
+          trackingStatus: "ID link failed"
         });
         this.resetErrorMsg();
 
@@ -378,10 +384,8 @@ class App extends Component {
 
       else if( UINFound === false ) {
         console.log( "UIN not in database" );
-        const message = "UIN not found in roster";
         this.setState({ 
-          linking: false,
-          trackingStatus: message
+          trackingStatus: "UIN not found in roster"
         });
         this.resetErrorMsg();
       }
@@ -530,13 +534,13 @@ class App extends Component {
 
         else {
 
+          message = message + " -- Bad Read, try again";
+
           this.setState({
             linking: false,
             cardReader: parsedCard,
             inputStatus: message
           });
-
-          message = message + " -- Bad Read, try again";
 
         }
 
@@ -603,11 +607,8 @@ class App extends Component {
 
   resetErrorMsg() {
 
-    setTimeout( () => { 
-
-      this.setState({ inputStatus: " " });
-    
-    }, 3000 );
+    //setTimeout( () => { this.setState({ inputStatus: " " });}, 3000 ); // milliseconds
+    console.log( "resetErrorMsg() is VOIDED right now!!!" );
     
   }
 
@@ -681,7 +682,7 @@ class App extends Component {
         </div>
 
         <div id = "wrapCenter">
-          <b>{inputStatus}</b>
+          - <b>{inputStatus}</b> -
         </div>
 
         <br/>
