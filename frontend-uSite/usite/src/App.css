@@ -5,6 +5,11 @@
   text-align: center;
 }
 
+.greenBG {
+  background: LimeGreen;
+  color: black;
+}
+
 .numPad {
   border: 3px solid #999;
   border-radius: 8px;

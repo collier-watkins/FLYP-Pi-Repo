@@ -63,26 +63,5 @@ app.on('activate', function () {
 
 });
 
-/*
-var USB = require("./usb-provider");
-var usb = new USB();
-var deviceHandle = null;
-
-usb.on("usbconnect", function(h) {
-
-  deviceHandle = h;
-
-  deviceHandle.on("data", (data) => {
-
-    var hex = data.toString("hex");
-    console.log( "Swipe data: " + hex );
-
-  });
-
-});
-
-usb.poll();
-*/
-
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.

@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import "./App.css";
 import * as api from "./apiCalls.js";
 import * as IDparse from "./IDparse.js";
+//BTW: cant use : "child_process" in react...
 
-// Demo Presentation TODO's
+// Demo Presentation sugestions
 // 1. How do we power off the device? exec call from react?
 // 2. Card swipe timeout to prevent someone from busting too many card swipes for their buds
 // 3. Better UX for displaying the status of the tracker
@@ -12,8 +13,6 @@ import * as IDparse from "./IDparse.js";
 // ...
 // oo. Super stretch goal of displaying student signin pictures, but really dont focus on this
 
-// TODO: when linking, let that card input be the attendance (HIGHEST PRIORITY)
-//
 // TODO: Fix the UX that tells if the input UIN is not in the roster
 //
 // TODO: Allow replacing an RFID or MagID link to UIN (somehow)
@@ -26,9 +25,6 @@ import * as IDparse from "./IDparse.js";
 //
 // TODO: Put prof swipes and student swipes into their own functions
 // ----> Close class is being called from students sometimes
-//
-// TODO: Unrecognized cards cause the class to end
-// ----> Is this fixed?
 
 class ClassList extends Component {
 
@@ -103,8 +99,9 @@ class Numpad extends Component {
           {this.renderButton(3)}
         </div>
         <div>
-          {this.renderButton(0)}
           {this.renderButton("clear")}
+          {this.renderButton(0)}
+          {this.renderButton("backspace")}
         </div>
       </div>
     );
@@ -239,6 +236,7 @@ class App extends Component {
       });
 
       this.resetErrorMsg();
+      this.succAttendanceFeedback();
 
     });
 
@@ -300,19 +298,17 @@ class App extends Component {
               const cardReader = this.state.cardReader;
               let message = "Trying Card link";
 
-              console.log( "Card Reader:", cardReader );
-
               // Update local roster
               if( cardReader[0] === "r" ) {//&& cardReader.length === 9 ) {
                 Roster[i].rfidNum = cardReader;
                 api.updateCardOrRfid( inputUIN, cardReader );
-                message = "Linking UIN: " + inputUIN + " to RFID: " + cardReader;
+                message = "Linking UIN to RFID" //+ inputUIN + " to RFID: " + cardReader;
                 linkingStatus = true;
               }
               else if( cardReader[0] === "m" ) {//&& cardReader.length > 11) { // mightbe 16
                 Roster[i].cardNum = cardReader;
                 api.updateCardOrRfid( inputUIN, cardReader );
-                message = "Linking UIN: " + inputUIN + " to magID: " + cardReader;
+                message = "Linking UIN to card swipe..." //+ inputUIN + " to magID: " + cardReader;
                 linkingStatus = true;
               }
               else {
@@ -325,21 +321,18 @@ class App extends Component {
               });
               this.resetErrorMsg();
 
-              // Is this okay? Only if Prof table & student tabels are separate
-              //const student = Roster[i].firstName;
-              //this.trackAttendance( inputUIN, theClass, date, student );
-
             }
 
-            else if( tracking === true ) {
+            // was else if --> ment the user had to swipe again to record or log in
+            if( tracking === true ) {
 
-              console.log( "Welcome to the class buddy" );
+              // Record students attedance
               const student = Roster[i].firstName;
               this.trackAttendance( inputUIN, theClass, date, student );
 
             }
 
-            else {
+            else { // log professor in
 
               api.professorExists( inputUIN ).then( data => {
 
@@ -364,33 +357,30 @@ class App extends Component {
 
           }
 
+        } // end of massive for loop
+
+        if( linkingStatus === false && linking === true ) {
+
+          console.log( "User failed linking UIN to card value" );
+          this.setState({ 
+            linking: false,
+            trackingStatus: "ID link failed"
+          });
+          this.resetErrorMsg();
+
         }
 
-      }
+        else if( UINFound === false ) {
+          console.log( "UIN not in database" );
+          this.setState({ 
+            trackingStatus: "UIN not found in roster"
+          });
+          this.resetErrorMsg();
+        }
 
-      // Both of these error messages are broken! FIXME
-      // !!!!!!
+      } // end of massive if statement
 
-      if( linkingStatus === false && linking === true ) {
-
-        console.log( "User failed linking UIN to card value" );
-        this.setState({ 
-          linking: false,
-          trackingStatus: "ID link failed"
-        });
-        this.resetErrorMsg();
-
-      }
-
-      else if( UINFound === false ) {
-        console.log( "UIN not in database" );
-        this.setState({ 
-          trackingStatus: "UIN not found in roster"
-        });
-        this.resetErrorMsg();
-      }
-
-    }
+    } // end of UIN conditional
 
     else if( inputType === "CardReader" && linking === false ) {
       
@@ -606,10 +596,11 @@ class App extends Component {
   }
 
   resetErrorMsg() {
-
     setTimeout( () => { this.setState({ inputStatus: " " });}, 3000 ); // milliseconds
-    //console.log( "resetErrorMsg() is VOIDED right now!!!" );
-    
+  }
+
+  succAttendanceFeedback() {
+    setTimeout( () => { this.setState({ attendanceStatus: false });}, 3000 ); // milliseconds
   }
 
   handleCardReader() {
@@ -625,12 +616,14 @@ class App extends Component {
       const newValue = ""
       this.setState({ UIN: newValue });
     }
+    else if( i === "backspace" ) {
+      this.setState( prevState => ({ UIN: prevState.UIN.slice(0, -1) }));
+    }
     else if( this.state.UIN.length === 9 ) {
       console.log( "Too long" );
     }
     else {
-      const newValue = this.state.UIN + i;
-      this.setState({ UIN: newValue });
+      this.setState( prevState => ({ UIN: prevState.UIN + i }));
     }
   }
 
@@ -681,7 +674,10 @@ class App extends Component {
           </div>
         </div>
 
-        <div id = "wrapCenter">
+        <div 
+          id = "wrapCenter" 
+          className = {attendanceStatus ? "greenBG" : "" }
+        >
           - <b>{inputStatus}</b> -
         </div>
 
