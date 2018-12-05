@@ -20,8 +20,8 @@
     "electron-start": "node src/electron-wait-react",
     "react-start": "react-scripts start",
     "postinstall": "electron-rebuild --force",
-    "package-linux": "electron-packager . release-builds/FLYP --platform=linux --arch=arm64 --overwrite",
-    "create-debian-installer": "electron-installer-debian --src FLYP-linux-arm64/ --dest installers/ --arch arm64",
+    "package-linux": "electron-packager . FLYP --platform=linux --arch=armv7l --overwrite",
+    "create-debian-installer": "electron-installer-debian --src FLYP-linux-armv7l/ --dest installers/ --arch armv7l",
     "pack": "build --dir",
     "dist": "npm run build && build",
     "postinstall": "install-app-deps"
