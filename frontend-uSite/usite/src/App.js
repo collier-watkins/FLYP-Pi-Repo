@@ -133,6 +133,7 @@ class App extends Component {
     this.handleNumpad = this.handleNumpad.bind(this);
     this.handleCardReader = this.handleCardReader.bind(this);
     this.handleSelectedClass = this.handleSelectedClass.bind(this);
+    this.handleExit = this.handleExit.bind(this);
     this.state = {
       UIN: "",
       CardReader: "",
@@ -627,6 +628,10 @@ class App extends Component {
     }
   }
 
+  handleExit() {
+    window.close();
+  }
+
   render() {
 
     const currClass = this.state.currClass;
@@ -703,6 +708,18 @@ class App extends Component {
             <Numpad
               onClick = {i => this.handleNumpad(i)}
             />
+
+            <div 
+              hidden = {trackingStatus}
+            >
+              <button
+                className = "exitButton"
+                onClick = {() => this.handleExit()}
+              >
+                Exit
+              </button>
+            </div>
+
           </div>
         </div>
 

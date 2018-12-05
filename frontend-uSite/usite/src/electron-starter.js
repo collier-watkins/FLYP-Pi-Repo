@@ -50,9 +50,19 @@ app.on('ready', createWindow);
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
+
+  // We can call shutdown here if we want, wall to other terminals for testing
+  //require('child_process').exec('wall YEET', function(msg){ console.log(msg) });
+
   if (process.platform !== 'darwin') {
       app.quit()
   }
+});
+
+app.on('before-quit', function () {
+
+  require('child_process').exec('wall yeet');
+
 });
 
 app.on('activate', function () {

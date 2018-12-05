@@ -10,6 +10,18 @@
   color: black;
 }
 
+.exitButton {
+  margin-top: 50px;
+  padding: 10px;
+  font-size: 20px;
+  border-radius: 16px;
+  color: #500000;
+  background-color: salmon;
+  border-color: #370000;
+  border: 3px solid;
+  width: 200px;
+}
+
 .numPad {
   border: 3px solid #999;
   border-radius: 8px;
