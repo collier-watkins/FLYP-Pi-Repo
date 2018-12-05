@@ -61,7 +61,7 @@ app.on('window-all-closed', function () {
 
 app.on('before-quit', function () {
 
-  require('child_process').exec('wall yeet');
+  require('child_process').exec('shutdown -h now');
 
 });
 

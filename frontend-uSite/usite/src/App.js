@@ -716,7 +716,7 @@ class App extends Component {
                 className = "exitButton"
                 onClick = {() => this.handleExit()}
               >
-                Exit
+                Power
               </button>
             </div>
 
