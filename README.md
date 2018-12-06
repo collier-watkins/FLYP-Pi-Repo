@@ -6,6 +6,8 @@
 $ npm install
 ```
 
+For info on remote connection to Raspberry Pi [click here](documentation/piConnection.md)
+
 ### Packaging the Electron app
 
 Use the script provided in `package.json` called `package-linux`. 
@@ -14,6 +16,7 @@ This will generate a packaged version of the app for armv7l for our Raspberry Pi
 ``` console
 $ npm run package-linux
 ```
+For more details on electron setup [click here](documentation/electronSetup.md)
 
 ### Creating the debian installer
 
