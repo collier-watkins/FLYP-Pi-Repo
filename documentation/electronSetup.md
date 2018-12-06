@@ -60,21 +60,3 @@ $ npm install --save-dev foreman
 ``` console
 $ npm install --save-dev node-hid
 ```
-
-## USB (you wont need this)
-
-``` console
-$ npm install --save-dev usb
-```
-
-## Electron Quick Start App (you wont need this) 
-
-``` console
-$ git clone https://github.com/electron/electron-quick-start
-
-$ cd electron-quick-start
-
-$ npm install
-
-$ npm start
-```
