@@ -1,7 +1,5 @@
 # Pi micro site
 
-![logo](FLYP.png)
-
 ### Setup 
 
 ``` console
