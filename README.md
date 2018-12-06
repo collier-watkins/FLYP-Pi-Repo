@@ -40,3 +40,6 @@ Check `package.json` for more specifications.
 Transfer this `.deb` file onto the Raspberry Pi, use a USB drive to transfer the files. 
 > You could use the `scp` command, however you will likely have to comment out the 
 > last line in the Pi's `.bashrc` file. 
+
+
+Repository for the webapp and API can be found [here](https://github.com/CurtisGreen/FLYP-EC2-Repo)
