@@ -1,24 +1,12 @@
 # Pi micro site
 
-## Dependencies
-
-Check `package.json` for more specifications.
-
-- React
-
-- Electron
-
-- Foreman
-
-- electron-rebuild
-
-- electron-packager
+### Setup 
 
 ``` console
-$ npm install --save-dev {dependencies}
+$ npm install
 ```
 
-## Packaging the Electron app
+### Packaging the Electron app
 
 Use the script provided in `package.json` called `package-linux`. 
 This will generate a packaged version of the app for armv7l for our Raspberry Pi. 
@@ -27,7 +15,7 @@ This will generate a packaged version of the app for armv7l for our Raspberry Pi
 $ npm run package-linux
 ```
 
-## Creating the debian installer
+### Creating the debian installer
 
 Use the script provided in `package.json` called `create-debain-installer`. 
 This will generate a `.deb` file. 
@@ -35,6 +23,16 @@ This will generate a `.deb` file.
 ``` console
 $ npm run create-debian-installer
 ```
+
+### Dependencies
+
+Check `package.json` for more specifications.
+
+- React
+- Electron
+- Foreman
+- electron-rebuild
+- electron-packager
 
 Transfer this `.deb` file onto the Raspberry Pi, use a USB drive to transfer the files. 
 > You could use the `scp` command, however you will likely have to comment out the 
