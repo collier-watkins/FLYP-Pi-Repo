@@ -1,4 +1,4 @@
-# FLYP Professor Portal & Backend
+# FLYP Pi Micro-Site
 
 ![logo](documentation/FLYP.png)
 
