@@ -2,7 +2,7 @@
 
 ![logo](documentation/FLYP.png)
 
-### [Device Readme](documentation/README.md)
+### [Device Readme](documentation)
 * An electron app for taking attendance 
 
 ### [Backend Repository](https://github.com/CurtisGreen/FLYP-EC2-Repo/tree/master/backend)
