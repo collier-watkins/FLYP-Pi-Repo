@@ -22,8 +22,6 @@
     "postinstall": "electron-rebuild --force",
     "package-linux": "electron-packager . FLYP --platform=linux --arch=armv7l --overwrite",
     "create-debian-installer": "electron-installer-debian --src FLYP-linux-armv7l/ --dest installers/ --arch armv7l",
-    "pack": "build --dir",
-    "dist": "npm run build && build",
     "postinstall": "install-app-deps"
   },
   "eslintConfig": {
@@ -43,12 +41,6 @@
     "foreman": "^3.0.1"
   },
   "build": {
-    "appId": "com.electron.electron-with-create-react-app",
-    "win": {
-      "iconUrl": "https://cdn2.iconfinder.com/data/icons/designer-skills/128/react-256.png"
-    },
-    "directories": {
-      "buildResources": "public"
-    }
+    "appId": "FLYP"
   }
 }

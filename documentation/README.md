@@ -12,6 +12,9 @@ For info on remote connection to Raspberry Pi [click here](documentation/piConne
 
 Use the script provided in `package.json` called `package-linux`. 
 This will generate a packaged version of the app for armv7l for our Raspberry Pi. 
+> You will need to change the **arch** flag value for different architectures. 
+> For instance, when a 64-bit version of Raspbian is released, both the packaging 
+> and installer commands will need `arm64` as the arch flag value. 
 
 ``` console
 $ npm run package-linux
