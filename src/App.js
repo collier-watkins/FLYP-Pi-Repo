@@ -511,7 +511,7 @@ class App extends Component {
 
       if( recognizedCard === false ) {
 
-        let message = "Unrecognized Card: " + parsedCard;
+        let message = "Unrecognized Card: Please Input your UIN"; //+ parsedCard;
 
         if(IDparse.rfidParser( cardValue, true ) === true || IDparse.magParser( cardValue, true ) === true ) {
 
